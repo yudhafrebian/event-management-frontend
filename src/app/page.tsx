@@ -1,4 +1,7 @@
+import LandingPage from "@/view/landing-page/page";
 
 export default function Home() {
-  return <div>page test</div>;
+  return (
+    <LandingPage />
+  )
 }
