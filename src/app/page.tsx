@@ -1,7 +1,7 @@
+import LandingPage from "@/view/landing-page/page";
+
 export default function Home() {
   return (
-    <div>
-      <div>page test</div>;
-    </div>
-  );
+    <LandingPage />
+  )
 }
