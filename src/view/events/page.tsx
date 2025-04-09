@@ -1,4 +1,7 @@
 "use client";
+import { format } from "date-fns";
+import { CalendarIcon} from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
 import { IoSearch } from "react-icons/io5";
 import { Input } from "@/components/ui/input";
 import { Check, ChevronsUpDown } from "lucide-react";
@@ -17,10 +20,19 @@ import {
 } from "@/components/ui/command";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 
 const EventView = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const [openLocation, setOpenLocation] = useState<boolean>(false);
+  const [openPrice, setOpenPrice] = useState<boolean>(false);
+  const [openSort, setOpenSort] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");
+  const [valueLocation, setValueLocation] = useState<string>("");
+  const [valueSort, setValueSort] = useState<string>("");
+  const [PriceMin, setPriceMin] = useState<number>(0);
+  const [PriceMax, setPriceMax] = useState<number>(0);
+  const [date, setDate] = useState<Date>();
 
   //temporary data
   const categories = [
@@ -65,6 +77,25 @@ const EventView = () => {
     },
   ];
 
+  const sort = [
+    {
+      label: "Newest",
+      value: "newest",
+    },
+    {
+      label: "Oldest",
+      value: "oldest",
+    },
+    {
+      label: "Lowest Price",
+      value: "lowest_price",
+    },
+    {
+      label: "Highest Price",
+      value: "highest_price",
+    },
+  ]
+
   return (
     <div className="px-20 py-16">
       <div className="mt-4">
@@ -82,7 +113,7 @@ const EventView = () => {
             placeholder="Search events..."
           />
         </div>
-        <div className="grid grid-cols-5">
+        <div className="grid grid-cols-5 gap-6">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <Button
@@ -115,6 +146,161 @@ const EventView = () => {
                         <Check
                           className={
                             value === category.value
+                              ? "opacity-100"
+                              : "opacity-0"
+                          }
+                        />
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
+
+          <Popover open={openLocation} onOpenChange={setOpenLocation}>
+            <PopoverTrigger asChild>
+              <Button
+                variant={"outline2"}
+                role="combobox"
+                aria-expanded={openLocation}
+                className="justify-between cursor-pointer"
+              >
+                {valueLocation
+                  ? location.find((loc) => loc.value === valueLocation)?.label
+                  : "Location"}
+                <ChevronsUpDown />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <Command>
+                <CommandList>
+                  <CommandInput placeholder="Search location..." />
+                  <CommandGroup>
+                    {location.map((loc) => (
+                      <CommandItem
+                        key={loc.value}
+                        value={loc.value}
+                        onSelect={(currentValue) => {
+                          setValueLocation(
+                            currentValue === valueLocation ? "" : currentValue
+                          );
+                          setOpenLocation(false);
+                        }}
+                      >
+                        {loc.label}
+                        <Check
+                          className={
+                            valueLocation === loc.value ? "opacity-100" : "opacity-0"
+                          }
+                        />
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
+
+          <Popover open={openPrice} onOpenChange={setOpenPrice}>
+            <PopoverTrigger asChild>
+              <Button
+                variant={"outline2"}
+                role="combobox"
+                aria-expanded={openPrice}
+                className="justify-between cursor-pointer"
+              >
+                {`${PriceMin.toLocaleString("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                  minimumFractionDigits: 0,
+                })} - ${PriceMax.toLocaleString("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                  minimumFractionDigits: 0,
+                })}`}
+                <ChevronsUpDown />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <div className="flex flex-col gap-3">
+                <div className="flex gap-2">
+                  <Label htmlFor="min" className="text-xs">
+                    Min. Price
+                  </Label>
+                  <Input
+                    id="min"
+                    type="number"
+                    className="w-2/3"
+                    placeholder="minimum price"
+                    defaultValue={PriceMin}
+                    onChange={(e) => setPriceMin(Number(e.target.value))}
+                  />
+                </div>
+                <div className="flex gap-2 ">
+                  <Label htmlFor="min" className="text-xs">
+                    Max. Price
+                  </Label>
+                  <Input
+                    id="min"
+                    type="number"
+                    className="w-2/3"
+                    placeholder="minimum price"
+                    defaultValue={PriceMax}
+                    onChange={(e) => setPriceMax(Number(e.target.value))}
+                  />
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
+
+          <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant={"outline"}
+              className="justify-start text-left cursor-pointer text-black"
+            >
+              {date ? (
+                format(date, "PPP")
+              ) : (
+                "Date Range"
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent>
+            <Calendar  mode="single" selected={date} onSelect={setDate} initialFocus/>
+          </PopoverContent>
+        </Popover>
+
+        <Popover open={openSort} onOpenChange={setOpenSort}>
+            <PopoverTrigger asChild>
+              <Button
+                variant={"outline2"}
+                role="combobox"
+                aria-expanded={open}
+                className="justify-between cursor-pointer"
+              >
+                {`Sort By : ${valueSort ? sort.find((sort) => sort.value === valueSort)?.label : ""}`}
+                <ChevronsUpDown />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <Command>
+                <CommandList>
+                  <CommandGroup>
+                    {sort.map((sort) => (
+                      <CommandItem
+                        key={sort.value}
+                        value={sort.value}
+                        onSelect={(currentValue) => {
+                          setValueSort(currentValue === valueSort ? "" : currentValue);
+                          setOpen(false);
+                        }}
+                      >
+                        {sort.label}
+                        <Check
+                          className={
+                            valueSort === sort.value
                               ? "opacity-100"
                               : "opacity-0"
                           }
