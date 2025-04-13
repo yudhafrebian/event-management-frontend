@@ -1,6 +1,6 @@
 "use client";
 import { format } from "date-fns";
-import { CalendarIcon} from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { IoSearch } from "react-icons/io5";
 import { Input } from "@/components/ui/input";
@@ -18,9 +18,11 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { apiCall } from "@/utils/apiHelper";
+import CardEvent from "@/components/event/cardEvent";
 
 const EventView = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -33,6 +35,37 @@ const EventView = () => {
   const [PriceMin, setPriceMin] = useState<number>(0);
   const [PriceMax, setPriceMax] = useState<number>(0);
   const [date, setDate] = useState<Date>();
+  const [data, setData] = useState<any>([]);
+
+  const getEvents = async () => {
+    try {
+      const response = await apiCall.get("/events/all");
+      setData(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const printEvents = () => {
+    return data.length > 0 ? (
+      data.map((item: any) => (
+        <CardEvent
+          key={item.id}
+          id={item.id}
+          picture={item.event_picture}
+          title={item.title}
+          description={item.description}
+          location={item.location}
+          start_date= {new Date(item.start_date)}
+          price={item.price}
+        />
+      ))
+    ) : (
+      <div className="font-bold text-2xl text-center">
+        <h1>No events found</h1>
+      </div>
+    );
+  }
 
   //temporary data
   const categories = [
@@ -94,7 +127,11 @@ const EventView = () => {
       label: "Highest Price",
       value: "highest_price",
     },
-  ]
+  ];
+
+  useEffect(() => {
+    getEvents()
+  },[])
 
   return (
     <div className="px-20 py-16">
@@ -191,7 +228,9 @@ const EventView = () => {
                         {loc.label}
                         <Check
                           className={
-                            valueLocation === loc.value ? "opacity-100" : "opacity-0"
+                            valueLocation === loc.value
+                              ? "opacity-100"
+                              : "opacity-0"
                           }
                         />
                       </CommandItem>
@@ -255,24 +294,25 @@ const EventView = () => {
           </Popover>
 
           <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant={"outline"}
-              className="justify-start text-left cursor-pointer text-black"
-            >
-              {date ? (
-                format(date, "PPP")
-              ) : (
-                "Date Range"
-              )}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent>
-            <Calendar  mode="single" selected={date} onSelect={setDate} initialFocus/>
-          </PopoverContent>
-        </Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant={"outline"}
+                className="justify-start text-left cursor-pointer text-black"
+              >
+                {date ? format(date, "PPP") : "Date Range"}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={setDate}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
 
-        <Popover open={openSort} onOpenChange={setOpenSort}>
+          <Popover open={openSort} onOpenChange={setOpenSort}>
             <PopoverTrigger asChild>
               <Button
                 variant={"outline2"}
@@ -280,7 +320,11 @@ const EventView = () => {
                 aria-expanded={open}
                 className="justify-between cursor-pointer"
               >
-                {`Sort By : ${valueSort ? sort.find((sort) => sort.value === valueSort)?.label : ""}`}
+                {`Sort By : ${
+                  valueSort
+                    ? sort.find((sort) => sort.value === valueSort)?.label
+                    : ""
+                }`}
                 <ChevronsUpDown />
               </Button>
             </PopoverTrigger>
@@ -293,7 +337,9 @@ const EventView = () => {
                         key={sort.value}
                         value={sort.value}
                         onSelect={(currentValue) => {
-                          setValueSort(currentValue === valueSort ? "" : currentValue);
+                          setValueSort(
+                            currentValue === valueSort ? "" : currentValue
+                          );
                           setOpen(false);
                         }}
                       >
@@ -313,6 +359,9 @@ const EventView = () => {
             </PopoverContent>
           </Popover>
         </div>
+      </div>
+      <div className="grid grid-cols-4 mt-10">
+        {printEvents()}
       </div>
     </div>
   );
