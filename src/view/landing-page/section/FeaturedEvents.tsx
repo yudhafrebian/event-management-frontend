@@ -60,7 +60,7 @@ const FeaturedEventSection = () => {
           title={item.title}
           description={item.description}
           location={item.location}
-          date={new Date(item.date)}
+          start_date={new Date(item.date)}
           price={item.price}
         />
       );
