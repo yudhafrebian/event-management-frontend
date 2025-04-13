@@ -3,6 +3,7 @@
 import { apiCall } from "@/utils/apiHelper";
 import AboutSection from "@/view/events/section/About";
 import HeroSection from "@/view/events/section/Hero";
+import OrganizerSection from "@/view/events/section/Organizer";
 import { useEffect, useState } from "react";
 
 interface IDetailEventProps {
@@ -20,7 +21,7 @@ interface IDetail {
   start_date: Date;
   end_date: Date;
   price: number;
-  available_seat: number;
+  available_seats: number;
   is_free: boolean;
   category: string;
   users: {
@@ -59,12 +60,20 @@ const DetailEvent: React.FunctionComponent<IDetailEventProps> = (props) => {
         end_date={event?.end_date || new Date()}
         location={event?.location || ""}
       />
-      <div className="flex px-24 py-8">
-        <div className="flex flex-col">
+      <div className="flex px-24 py-8 gap-8">
+        <div className="flex flex-col w-2/3">
           <AboutSection
             about={event?.about || ""}
-            seats={event?.available_seat || 0}
+            seats={event?.available_seats || 0}
             price={event?.price === 0 ? 0 : event?.price || 0}
+          />
+        </div>
+        <div className="flex flex-col w-1/3">
+          <OrganizerSection
+            profile_picture={event?.users.profile_picture || ""}
+            first_name={event?.users.first_name || ""}
+            last_name={event?.users.last_name || ""}
+            email={event?.users.email || ""}
           />
         </div>
       </div>
