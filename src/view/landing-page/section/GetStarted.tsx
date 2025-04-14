@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const GetStartedSection = () => {
   return (
@@ -11,7 +12,7 @@ const GetStartedSection = () => {
           </p>
         </div>
         <Button variant={"secondary"} className="cursor-pointer" size={"lg"}>
-          Get Started Now
+          <Link href={"/sign-up"}>Get Started Now</Link>
         </Button>
       </div>
     </div>
