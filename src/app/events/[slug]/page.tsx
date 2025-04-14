@@ -1,9 +1,11 @@
 "use client";
 
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { apiCall } from "@/utils/apiHelper";
 import AboutSection from "@/view/events/section/About";
 import HeroSection from "@/view/events/section/Hero";
 import OrganizerSection from "@/view/events/section/Organizer";
+import TicketTypesSection from "@/view/events/section/TicketTypes";
 import { useEffect, useState } from "react";
 
 interface IDetailEventProps {
@@ -11,26 +13,36 @@ interface IDetailEventProps {
 }
 
 interface IDetail {
-  id: string;
-  organizer_id: string;
-  event_picture: string;
-  title: string;
-  description: string;
-  about: string;
-  location: string;
-  start_date: Date;
-  end_date: Date;
-  price: number;
-  available_seats: number;
-  is_free: boolean;
-  category: string;
-  users: {
+  detail: {
     id: string;
-    first_name: string;
-    last_name: string;
-    profile_picture: string;
-    email: string;
+    organizer_id: string;
+    event_picture: string;
+    title: string;
+    description: string;
+    about: string;
+    location: string;
+    start_date: Date;
+    end_date: Date;
+    available_seats: number;
+    is_free: boolean;
+    category: string;
+    users: {
+      id: string;
+      first_name: string;
+      last_name: string;
+      profile_picture: string;
+      email: string;
+    };
+    ticket_types: {
+      id: string;
+      type_name: string;
+      price: number;
+      quota: number;
+      description:string
+    }[];
   };
+  price: any;
+  quota: number;
 }
 
 const DetailEvent: React.FunctionComponent<IDetailEventProps> = (props) => {
@@ -38,14 +50,28 @@ const DetailEvent: React.FunctionComponent<IDetailEventProps> = (props) => {
   const getEventDetail = async () => {
     try {
       const eventId = await props.params;
-      console.log(eventId);
       const response = await apiCall.get(`/events/${eventId.slug}`);
       console.log(response.data);
-
       setEvent(response.data);
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const renderPrice = () => {
+    const prices = event?.price;
+    if (!prices || !Array.isArray(prices) || prices.length === 0) return "Free";
+
+    if (prices.length === 1) {
+      return `Rp${prices[0].toLocaleString("id-ID")}`;
+    }
+
+    const min = prices[0];
+    console.log(prices);
+    const max = prices[prices.length - 1];
+    return `Rp${min.toLocaleString("id-ID")} - Rp${max.toLocaleString(
+      "id-ID"
+    )}`;
   };
 
   useEffect(() => {
@@ -54,26 +80,40 @@ const DetailEvent: React.FunctionComponent<IDetailEventProps> = (props) => {
   return (
     <main>
       <HeroSection
-        background_image={event?.event_picture || ""}
-        title={event?.title || ""}
-        start_date={event?.start_date || new Date()}
-        end_date={event?.end_date || new Date()}
-        location={event?.location || ""}
+        background_image={event?.detail.event_picture || ""}
+        title={event?.detail.title || ""}
+        start_date={event?.detail.start_date || new Date()}
+        end_date={event?.detail.end_date || new Date()}
+        location={event?.detail.location || ""}
       />
       <div className="flex px-24 py-8 gap-8">
-        <div className="flex flex-col w-2/3">
+        <div className="flex flex-col w-2/3 gap-8">
           <AboutSection
-            about={event?.about || ""}
-            seats={event?.available_seats || 0}
-            price={event?.price === 0 ? 0 : event?.price || 0}
+            about={event?.detail.about || ""}
+            seats={event?.quota || 0}
+            price={renderPrice()}
           />
+          <Card>
+            <CardHeader>
+              <CardTitle className="font-bold text-2xl">Ticket Types</CardTitle>
+            </CardHeader>
+            {event?.detail.ticket_types?.map((ticket) => (
+              <TicketTypesSection
+                key={ticket.id}
+                type_name={ticket.type_name}
+                price={ticket.price}
+                quota={ticket.quota}
+                description={ticket.description}
+              />
+            ))}
+          </Card>
         </div>
         <div className="flex flex-col w-1/3">
           <OrganizerSection
-            profile_picture={event?.users.profile_picture || ""}
-            first_name={event?.users.first_name || ""}
-            last_name={event?.users.last_name || ""}
-            email={event?.users.email || ""}
+            profile_picture={event?.detail.users.profile_picture || ""}
+            first_name={event?.detail.users.first_name || ""}
+            last_name={event?.detail.users.last_name || ""}
+            email={event?.detail.users.email || ""}
           />
         </div>
       </div>

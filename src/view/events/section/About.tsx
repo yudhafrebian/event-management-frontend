@@ -10,7 +10,7 @@ import * as React from "react";
 interface IAboutSectionProps {
   about: string;
   seats: number;
-  price: number;
+  price: any;
 }
 
 const AboutSection: React.FunctionComponent<IAboutSectionProps> = (props) => {
