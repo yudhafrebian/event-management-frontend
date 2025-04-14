@@ -1,30 +1,40 @@
+"use client";
+
 import Link from "next/link";
 import * as React from "react";
 import { Button } from "../ui/button";
+import { usePathname } from "next/navigation";
 
-interface INavbarProps {}
+const Navbar: React.FunctionComponent = () => {
+  const pathname = usePathname();
 
-const Navbar: React.FunctionComponent<INavbarProps> = (props) => {
+  const navLinks = [
+    { label: "Browse Event", href: "/events" },
+    { label: "Create Event", href: "/create" },
+    { label: "About", href: "/about" },
+    { label: "Contact", href: "/contact" },
+  ];
+
   return (
     <div className="px-24 py-4 fixed z-50 w-full bg-white shadow">
       <div className="flex justify-between items-center">
         <div>
+          <Link href={"/"}>
           <p>LOGO</p>
+          </Link>
         </div>
         <nav>
           <ul className="flex gap-8 text-muted-foreground">
-            <li className="hover:text-primary">
-              <Link href={"/#"}>Browse Event</Link>
-            </li>
-            <li className="hover:text-primary">
-              <Link href={"/#"}>Create Event</Link>
-            </li>
-            <li className="hover:text-primary">
-              <Link href={"/#"}>About</Link>
-            </li>
-            <li className="hover:text-primary">
-              <Link href={"/#"}>Contact</Link>
-            </li>
+            {navLinks.map((link) => (
+              <li
+                key={link.href}
+                className={`hover:text-primary ${
+                  pathname === link.href ? "text-primary font-semibold" : ""
+                }`}
+              >
+                <Link href={link.href}>{link.label}</Link>
+              </li>
+            ))}
           </ul>
         </nav>
         <div className="flex gap-2">

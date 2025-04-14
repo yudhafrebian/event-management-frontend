@@ -41,6 +41,7 @@ const EventView = () => {
     try {
       const response = await apiCall.get("/events/all");
       setData(response.data);
+      console.log(response.data)
     } catch (error) {
       console.log(error);
     }
@@ -57,7 +58,7 @@ const EventView = () => {
           description={item.description}
           location={item.location}
           start_date= {new Date(item.start_date)}
-          price={item.price}
+          price={item.ticket_types.map((item: any) => item.price)[0]}
         />
       ))
     ) : (

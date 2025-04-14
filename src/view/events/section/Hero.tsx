@@ -12,6 +12,11 @@ interface IHeroSectionProps {
 }
 
 const HeroSection: React.FunctionComponent<IHeroSectionProps> = (props) => {
+  const startDate = new Date(props.start_date);
+  const endDate = new Date(props.end_date);
+
+  const isSameDay = startDate.toDateString() === endDate.toDateString();
+
   return (
     <div className="h-[400px] pt-16">
       <div className="relative w-full h-full">
@@ -31,8 +36,12 @@ const HeroSection: React.FunctionComponent<IHeroSectionProps> = (props) => {
             <div className="flex gap-2">
               <CalendarIcon />
               <p className="text-white">
-                {format(props.start_date, "PPP")} -{" "}
-                {format(props.end_date, "PPP")}
+                {isSameDay
+                  ? format(props.start_date, "PPP")
+                  : `${format(props.start_date, "PPP")} - ${format(
+                      props.end_date,
+                      "PPP"
+                    )}`}
               </p>
             </div>
             <div className="flex gap-2">
