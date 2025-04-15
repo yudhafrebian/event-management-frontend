@@ -12,7 +12,7 @@ const SearchBar = () => {
   const [date, setDate] = useState<Date>();
   return (
     <div className="w-[90%] mx-auto relative z-0 bottom-10 bg-white rounded-2xl shadow-xl">
-      <div className="p-6 grid grid-cols-4 gap-4">
+      <div className="p-6 grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="relative">
           <IoSearch
             className="absolute left-2 top-1/2 -translate-y-1/2"

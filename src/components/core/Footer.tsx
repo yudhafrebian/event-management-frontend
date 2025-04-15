@@ -7,10 +7,10 @@ import { Separator } from "../ui/separator";
 
 const Footer = () => {
   return (
-    <footer className="bg-[#111827] px-20 py-7">
-      <div className="grid grid-cols-4 gap-10 place-content-center">
+    <footer className="bg-[#111827] px-4 py-8 md:px-20 md:py-7">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-10 place-content-center">
         <div>
-          <h1 className="text-white text-2xl font-bold">Nama Event</h1>
+          <h1 className="text-white text-lg md:text-2xl font-bold">Nama Event</h1>
           <p className="text-[#9CA3AF] mt-5">
             Making event management simple and efficient for everyone.
           </p>

@@ -24,7 +24,7 @@ const CardEvent: React.FunctionComponent<ICardEventProps> = (props) => {
   return (
     <Card key={props.id} className="pt-0 border-none shadow-lg">
       <CardHeader className="p-0">
-        <div className="relative w-full h-48">
+        <div className="relative w-full h-32 md:h-48">
           <Image
             src={
               props.picture ||
@@ -51,8 +51,8 @@ const CardEvent: React.FunctionComponent<ICardEventProps> = (props) => {
             <p className="text-sm text-muted-foreground/90">{props.location}</p>
           </div>
         </div>
-        <h2 className="font-bold text-xl pt-2">{props.title}</h2>
-        <p className="text-muted-foreground pt-3">{props.description}</p>
+        <h2 className="font-bold text-lg md:text-xl pt-2">{props.title}</h2>
+        <p className="text-muted-foreground text-xs md:text-base pt-3">{props.description}</p>
       </CardContent>
       <CardFooter>
         <div className="flex justify-between w-full">
