@@ -43,12 +43,12 @@ const CategoriesSection = () => {
     },
   ];
   return (
-    <div className="py-16 px-20 bg-[#F9FAFB]">
-      <h1 className="font-bold text-3xl">Browse by Category</h1>
-      <div className="grid grid-cols-6 place-items-center mt-8">
+    <div className="px-4 py-8 md:py-16 md:px-20 bg-[#F9FAFB]">
+      <h1 className="font-bold text-xl md:text-3xl">Browse by Category</h1>
+      <div className="grid grid-cols-2 md:grid-cols-6 place-items-center gap-6 md:gap-0 mt-8">
         {categories.map((item, index) => (
           <Link href={item.url} key={index}>
-            <div className="flex flex-col gap-2 justify-center items-center rounded-full border h-32 w-32 hover:bg-accent hover:text-primary duration-400">
+            <div className="flex flex-col gap-2 justify-center items-center rounded-full border h-28 w-28 md:h-32 md:w-32 hover:bg-accent hover:text-primary duration-400">
               {item.icon}
               <p className="font-bold">{item.title}</p>
             </div>
