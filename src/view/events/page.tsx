@@ -23,6 +23,8 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { apiCall } from "@/utils/apiHelper";
 import CardEvent from "@/components/event/cardEvent";
+import Image from "next/image";
+import image from "../../../public/assets/undraw_empty_4zx0.png"
 
 const EventView = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -41,7 +43,7 @@ const EventView = () => {
     try {
       const response = await apiCall.get("/events/all");
       setData(response.data);
-      console.log(response.data)
+      console.log(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -50,23 +52,26 @@ const EventView = () => {
   const printEvents = () => {
     return data.length > 0 ? (
       data.map((item: any) => (
-        <CardEvent
-          key={item.id}
-          id={item.id}
-          picture={item.event_picture}
-          title={item.title}
-          description={item.description}
-          location={item.location}
-          start_date= {new Date(item.start_date)}
-          price={item.ticket_types.map((item: any) => item.price)[0]}
-        />
+        <div className="grid grid-cols-4 mt-10">
+          <CardEvent
+            key={item.id}
+            id={item.id}
+            picture={item.event_picture}
+            title={item.title}
+            description={item.description}
+            location={item.location}
+            start_date={new Date(item.start_date)}
+            price={item.ticket_types.map((item: any) => item.price)[0]}
+          />
+        </div>
       ))
     ) : (
-      <div className="font-bold text-2xl text-center">
+      <div className="font-bold text-2xl flex flex-col justify-center items-center mt-10">
+        <Image src={"/assets/undraw_empty_4zx0.png"} alt="no data" width={300} height={300} />
         <h1>No events found</h1>
       </div>
     );
-  }
+  };
 
   //temporary data
   const categories = [
@@ -131,11 +136,11 @@ const EventView = () => {
   ];
 
   useEffect(() => {
-    getEvents()
-  },[])
+    getEvents();
+  }, []);
 
   return (
-    <div className="px-20 py-16">
+    <div className=" px-4 py-12 md:px-20 md:py-16">
       <div className="mt-4">
         <h1 className="font-bold text-3xl">All Event</h1>
       </div>
@@ -151,7 +156,7 @@ const EventView = () => {
             placeholder="Search events..."
           />
         </div>
-        <div className="grid grid-cols-5 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-6">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <Button
@@ -361,9 +366,7 @@ const EventView = () => {
           </Popover>
         </div>
       </div>
-      <div className="grid grid-cols-4 mt-10">
-        {printEvents()}
-      </div>
+      {printEvents()}
     </div>
   );
 };
