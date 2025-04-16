@@ -29,24 +29,38 @@ const FeaturedEventSection = () => {
   };
 
   const printCardList = () => {
-    return data.map((item) => {
-      return (
-        <CardEvent
-          key={item.id}
-          id={item.id}
-          picture={item.event_picture}
-          title={item.title}
-          description={item.description}
-          location={item.location}
-          start_date={new Date(item.start_date)}
-          price={
-            item.ticket_types
-              .map((item: any) => item.price)
-              .sort((a: number, b: number) => a - b)[0]
-          }
+    return data.length > 0 ? (
+      data.map((item) => {
+        return (
+          <div className="grid md:grid-cols-3 gap-4 md:gap-8 mt-4 md:mt-8">
+            <CardEvent
+              key={item.id}
+              id={item.id}
+              picture={item.event_picture}
+              title={item.title}
+              description={item.description}
+              location={item.location}
+              start_date={new Date(item.start_date)}
+              price={
+                item.ticket_types
+                  .map((item: any) => item.price)
+                  .sort((a: number, b: number) => a - b)[0]
+              }
+            />
+          </div>
+        );
+      })
+    ) : (
+      <div className="font-bold text-xl md:text-2xl flex flex-col justify-center items-center mt-10">
+        <Image
+          src={"/assets/undraw_empty_4zx0.png"}
+          alt="no data"
+          width={300}
+          height={300}
         />
-      );
-    });
+        <h1>No events found</h1>
+      </div>
+    );
   };
 
   useEffect(() => {
@@ -62,9 +76,7 @@ const FeaturedEventSection = () => {
           </Button>
         </Link>
       </div>
-      <div className="grid md:grid-cols-3 gap-4 md:gap-8 mt-4 md:mt-8">
-        {printCardList()}
-      </div>
+      {printCardList()}
     </div>
   );
 };
