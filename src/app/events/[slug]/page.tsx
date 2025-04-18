@@ -26,12 +26,11 @@ interface IDetail {
     available_seats: number;
     is_free: boolean;
     category: string;
-    users: {
+    organizer: {
       id: string;
-      first_name: string;
-      last_name: string;
-      profile_picture: string;
-      email: string;
+      organizer_name: string;
+      profile_img: string;
+      description: string;
     };
     ticket_types: {
       id: string;
@@ -110,10 +109,9 @@ const DetailEvent: React.FunctionComponent<IDetailEventProps> = (props) => {
         </div>
         <div className="flex flex-col w-1/3">
           <OrganizerSection
-            profile_picture={event?.detail.users.profile_picture || ""}
-            first_name={event?.detail.users.first_name || ""}
-            last_name={event?.detail.users.last_name || ""}
-            email={event?.detail.users.email || ""}
+            profile_picture={event?.detail.organizer.profile_img || ""}
+            organizer_name={event?.detail.organizer.organizer_name || ""}
+            email={event?.detail.organizer.description || ""}
           />
         </div>
       </div>

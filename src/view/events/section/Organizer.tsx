@@ -4,8 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import * as React from "react";
 
 interface IOrganizerSectionProps {
-  first_name: string;
-  last_name: string;
+  organizer_name: string;
   profile_picture: string;
   email: string;
 }
@@ -23,17 +22,17 @@ const OrganizerSection: React.FunctionComponent<IOrganizerSectionProps> = (
           <div>
             <Avatar className="w-12 h-12">
               <AvatarImage src={props.profile_picture} alt="Organizer" />
-              <AvatarFallback>{props.first_name}</AvatarFallback>
+              <AvatarFallback>{props.organizer_name.split(" ")[0][0]}</AvatarFallback>
             </Avatar>
           </div>
           <div>
             <h4 className="font-bold">
-              {props.first_name} {props.last_name}
+              {props.organizer_name}
             </h4>
             <p className="text-sm text-muted-foreground">{props.email}</p>
           </div>
         </div>
-        <Button className="cursor-pointer" >Contact Organizer</Button>
+        <Button className="cursor-pointer" >Visit Organizer</Button>
       </CardContent>
     </Card>
   );

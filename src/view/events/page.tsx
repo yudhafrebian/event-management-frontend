@@ -22,9 +22,9 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { apiCall } from "@/utils/apiHelper";
-import CardEvent from "@/components/event/cardEvent";
+import CardEvent from "@/components/card/cardEvent";
 import Image from "next/image";
-import image from "../../../public/assets/undraw_empty_4zx0.png"
+import image from "../../../public/assets/undraw_empty_4zx0.png";
 
 const EventView = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -67,7 +67,12 @@ const EventView = () => {
       ))
     ) : (
       <div className="font-bold text-2xl flex flex-col justify-center items-center mt-10">
-        <Image src={"/assets/undraw_empty_4zx0.png"} alt="no data" width={300} height={300} />
+        <Image
+          src={"/assets/undraw_empty_4zx0.png"}
+          alt="no data"
+          width={300}
+          height={300}
+        />
         <h1>No events found</h1>
       </div>
     );
