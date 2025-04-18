@@ -11,7 +11,7 @@ import Image from "next/image";
 import { format } from "date-fns";
 import * as React from "react";
 import { Badge } from "@/components/ui/badge";
-import CardEvent from "@/components/event/cardEvent";
+import CardEvent from "@/components/card/cardEvent";
 import Link from "next/link";
 import { apiCall } from "@/utils/apiHelper";
 import { useEffect, useState } from "react";
