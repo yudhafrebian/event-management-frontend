@@ -27,13 +27,13 @@ interface IDetail {
     is_free: boolean;
     category: string;
     organizer: {
-      id: string;
+      id: any;
       organizer_name: string;
       profile_img: string;
       description: string;
     };
     ticket_types: {
-      id: string;
+      id: number;
       type_name: string;
       price: number;
       quota: number;
@@ -50,7 +50,6 @@ const DetailEvent: React.FunctionComponent<IDetailEventProps> = (props) => {
     try {
       const eventId = await props.params;
       const response = await apiCall.get(`/events/${eventId.slug}`);
-      console.log(response.data);
       setEvent(response.data);
     } catch (error) {
       console.log(error);
@@ -109,6 +108,7 @@ const DetailEvent: React.FunctionComponent<IDetailEventProps> = (props) => {
         </div>
         <div className="flex flex-col w-1/3">
           <OrganizerSection
+            id={event?.detail.organizer.id || ""}
             profile_picture={event?.detail.organizer.profile_img || ""}
             organizer_name={event?.detail.organizer.organizer_name || ""}
             email={event?.detail.organizer.description || ""}
