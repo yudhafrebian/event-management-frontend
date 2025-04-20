@@ -11,7 +11,7 @@ const OrganizerView = () => {
 
   const getAllOrganizer = async () => {
     try {
-      const response = await apiCall.get("/organizer/all");
+      const response = await apiCall.get("/organizers/all");
       setData(response.data);
     } catch (error) {
       console.log(error);
