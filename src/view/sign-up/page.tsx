@@ -7,6 +7,7 @@ import { Formik, Form, FormikProps } from "formik";
 import Link from "next/link";
 import { SignUpSchema } from "./schema/signUpSchema";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { apiCall } from "@/utils/apiHelper";
 
 const SignUp = () => {
   interface IFormValue {
@@ -15,6 +16,7 @@ const SignUp = () => {
     email: string;
     password: string;
     confPassword: string;
+    referal_code: string;
   }
 
   const [typePass, setTypePass] = React.useState<string>("password");
@@ -23,6 +25,22 @@ const SignUp = () => {
       setTypePass("text");
     } else if (typePass === "text") {
       setTypePass("password");
+    }
+  };
+
+  const onSignUp = async (values: IFormValue) => {
+    try {
+      const response = await apiCall.post("/auth/register", {
+        first_name: values.firstname,
+        last_name: values.lastname,
+        email: values.email,
+        password: values.password,
+        referal_code: values.referal_code,
+      });
+      throw `Periksa email ${response.data.email} anda`;
+    } catch (error) {
+      console.log(error);
+      throw "error";
     }
   };
 
@@ -41,11 +59,14 @@ const SignUp = () => {
                 email: "",
                 password: "",
                 confPassword: "",
+                referal_code: "",
               }}
               validationSchema={SignUpSchema}
               onSubmit={(values) => {
+                // onSugnUp function not working yet
+                // formik not show error at front end
                 console.log("Data from input", values);
-                //onSignUp function
+                onSignUp(values);
               }}
             >
               {(props: FormikProps<IFormValue>) => {
@@ -112,6 +133,12 @@ const SignUp = () => {
                           )}
                         </Button>
                       </div>
+                      <Input
+                        name="ref code"
+                        type="text"
+                        placeholder="Referal Code"
+                        onChange={handleChange}
+                      />
                       <div className="flex gap-4">
                         <Button type="submit" className="text-white">
                           Sign Up
