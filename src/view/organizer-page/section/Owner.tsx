@@ -5,7 +5,7 @@ import Link from "next/link";
 import * as React from "react";
 
 interface IOwnerSectionProps {
-  id: number;
+  id: string;
   first_name: string;
   last_name: string;
   profile_picture: string;
@@ -18,7 +18,7 @@ const OwnerSection: React.FunctionComponent<IOwnerSectionProps> = (
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="font-bold text-xl">Event Organizer</CardTitle>
+        <CardTitle className="font-bold text-xl">Organizer Owner</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <div className="flex gap-4">

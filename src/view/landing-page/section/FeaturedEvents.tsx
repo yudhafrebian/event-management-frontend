@@ -32,22 +32,20 @@ const FeaturedEventSection = () => {
     return data.length > 0 ? (
       data.map((item) => {
         return (
-          <div className="grid md:grid-cols-3 gap-4 md:gap-8 mt-4 md:mt-8">
-            <CardEvent
-              key={item.id}
-              id={item.id}
-              picture={item.event_picture}
-              title={item.title}
-              description={item.description}
-              location={item.location}
-              start_date={new Date(item.start_date)}
-              price={
-                item.ticket_types
-                  .map((item: any) => item.price)
-                  .sort((a: number, b: number) => a - b)[0]
-              }
-            />
-          </div>
+          <CardEvent
+            key={item.id}
+            id={item.id}
+            picture={item.event_picture}
+            title={item.title}
+            description={item.description}
+            location={item.location}
+            start_date={new Date(item.start_date)}
+            price={
+              item.ticket_types
+                .map((item: any) => item.price)
+                .sort((a: number, b: number) => a - b)[0]
+            }
+          />
         );
       })
     ) : (
@@ -76,7 +74,9 @@ const FeaturedEventSection = () => {
           </Button>
         </Link>
       </div>
-      {printCardList()}
+      <div className="grid md:grid-cols-3 gap-4 md:gap-8 mt-4 md:mt-8">
+        {printCardList()}
+      </div>
     </div>
   );
 };
