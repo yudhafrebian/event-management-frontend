@@ -7,12 +7,20 @@ import Link from "next/link";
 import { Form, Formik, FormikProps } from "formik";
 import { SignInSchema } from "./schema/signInSchema";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/app/hook";
+import { apiCall } from "@/utils/apiHelper";
+import { setSignIn } from "@/lib/redux/features/authSlice";
 
 const SignIn = () => {
   interface IUserValue {
     email: string;
     password: string;
   }
+
+  const router = useRouter();
+
+  const dispatch = useAppDispatch();
 
   const [typePass, setTypePass] = React.useState<string>("password");
 
@@ -21,6 +29,41 @@ const SignIn = () => {
       setTypePass("text");
     } else if (typePass === "text") {
       setTypePass("password");
+    }
+  };
+
+  const onSignIn = async (values: IUserValue) => {
+    try {
+      console.log(values.email);
+      const response = await apiCall.post(`/auth/signin`, {
+        email: values.email,
+        password: values.password,
+      });
+      console.log(response.data);
+
+      if (response.data.token) {
+        dispatch(
+          setSignIn({
+            id: response.data.id,
+            first_name: response.data.first_name,
+            last_name: response.data.last_name,
+            email: response.data.email,
+            token: response.data.token,
+          })
+        );
+        console.log(response.data);
+
+        localStorage.setItem("auth", response.data.token);
+        router.replace(`/events`);
+        // need fix alert response
+        throw "Sign in berhasil";
+      } else {
+        throw "Akun tidak ditemukan";
+      }
+    } catch (error) {
+      console.log(error);
+
+      throw "error";
     }
   };
 
@@ -37,7 +80,7 @@ const SignIn = () => {
               validationSchema={SignInSchema}
               onSubmit={(values) => {
                 console.log(values);
-                //onSignIn function
+                onSignIn(values);
               }}
             >
               {(props: FormikProps<IUserValue>) => {
@@ -73,25 +116,7 @@ const SignIn = () => {
                           )}
                         </Button>
                       </div>
-                      <div className="flex items-center justify-between ">
-                        <Input
-                          name="confPassword"
-                          type={typePass}
-                          placeholder="Confirm Password"
-                          onChange={handleChange}
-                        />
-                        <Button
-                          type="button"
-                          className="shadow-none p-0"
-                          onClick={onBtShowPass}
-                        >
-                          {typePass === "password" ? (
-                            <FaEyeSlash size={24} />
-                          ) : (
-                            <FaEye size={24} />
-                          )}
-                        </Button>
-                      </div>
+
                       <div className="flex gap-4">
                         <Button type="submit" className="text-white">
                           Sign In

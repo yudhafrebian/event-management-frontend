@@ -1,9 +1,7 @@
-import SignIn from '@/view/sign-in/page';
+import SignIn from "@/view/sign-in/page";
 
 const SignInPage = () => {
-  return (
-    <SignIn />
-  )
+  return <SignIn />;
 };
 
 export default SignInPage;
