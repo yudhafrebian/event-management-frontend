@@ -19,8 +19,8 @@ const Navbar: React.FunctionComponent = () => {
   const navLinks = [
     { label: "Browse Event", href: "/events", icon: <Search /> },
     { label: "Create Event", href: "/create", icon: <CirclePlus /> },
+    { label: "Organizers", href: "/organizers", icon: <Phone /> },
     { label: "About", href: "/about", icon: <Info /> },
-    { label: "Contact", href: "/contact", icon: <Phone /> },
   ];
 
   return (
