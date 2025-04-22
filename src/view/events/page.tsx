@@ -24,7 +24,7 @@ import { Label } from "@/components/ui/label";
 import { apiCall } from "@/utils/apiHelper";
 import CardEvent from "@/components/card/cardEvent";
 import Image from "next/image";
-import image from "../../../public/assets/undraw_empty_4zx0.png";
+import CardLoader from "./Loading";
 
 const EventView = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -38,32 +38,34 @@ const EventView = () => {
   const [PriceMax, setPriceMax] = useState<number>(0);
   const [date, setDate] = useState<Date>();
   const [data, setData] = useState<any>([]);
+  const [loading, setLoading] = useState(false);
 
   const getEvents = async () => {
     try {
+      setLoading(true);
       const response = await apiCall.get("/events/all");
       setData(response.data);
       console.log(response.data);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const printEvents = () => {
     return data.length > 0 ? (
       data.map((item: any) => (
-        <div className="grid grid-cols-4 mt-10">
-          <CardEvent
-            key={item.id}
-            id={item.id}
-            picture={item.event_picture}
-            title={item.title}
-            description={item.description}
-            location={item.location}
-            start_date={new Date(item.start_date)}
-            price={item.ticket_types.map((item: any) => item.price)[0]}
-          />
-        </div>
+        <CardEvent
+          key={item.id}
+          id={item.id}
+          picture={item.event_picture}
+          title={item.title}
+          description={item.description}
+          location={item.location}
+          start_date={new Date(item.start_date)}
+          price={item.ticket_types.map((item: any) => item.price)[0]}
+        />
       ))
     ) : (
       <div className="font-bold text-2xl flex flex-col justify-center items-center mt-10">
@@ -371,7 +373,7 @@ const EventView = () => {
           </Popover>
         </div>
       </div>
-      {printEvents()}
+      <div className="grid grid-cols-4 mt-10 gap-4">{loading ? <CardLoader /> : printEvents() }</div>
     </div>
   );
 };

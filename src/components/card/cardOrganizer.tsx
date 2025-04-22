@@ -36,11 +36,11 @@ const CardOrganizer: React.FunctionComponent<ICardOrganizerProps> = (props) => {
         </div>
       </CardHeader>
       <CardContent>
-        <h2 className="font-bold text-lg md:text-xl pt-2">{props.name}</h2>
-        <p className="text-muted-foreground text-xs md:text-base pt-3">{props.description}</p>
+        <h2 className="font-bold text-lg md:text-xl">{props.name}</h2>
+        <p className="text-muted-foreground text-xs md:text-base">{props.description}</p>
       </CardContent>
       <CardFooter>
-        <div className="flex justify-between w-full">
+        <div className="flex justify-end w-full">
           <Link href={`/organizers/${props.id}`}>
             <Button className="cursor-pointer">Visit Profile</Button>
           </Link>

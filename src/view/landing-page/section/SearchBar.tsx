@@ -49,7 +49,19 @@ const SearchBar = () => {
       params.delete("location");
     }
 
-    
+    if (date?.from) {
+      params.set("from", date.from.toISOString());
+    } else {
+      params.delete("from");
+    }
+
+    if (date?.to) {
+      params.set("to", date.to.toISOString());
+    } else {
+      params.delete("to");
+    }
+
+    console.log(params.toString());
 
     router.push(`/?${params.toString()}#events`);
   };

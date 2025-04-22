@@ -14,7 +14,7 @@ const CategoriesSection = () => {
     {
       icon: <Music />,
       title: "Music",
-      url: "#"
+      url: "/events/category/music"
     },
     {
       icon: <Cpu />,

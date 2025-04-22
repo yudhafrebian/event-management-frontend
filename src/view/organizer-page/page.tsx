@@ -21,15 +21,13 @@ const OrganizerView = () => {
   const printOrganizer = () => {
     return data.length > 0 ? (
       data.map((item: any) => (
-        <div className="grid grid-cols-4 mt-10">
-          <CardOrganizer
-            key={item.id}
-            id={item.id}
-            picture={item.event_picture}
-            name={item.organizer_name}
-            description={item.description}
-          />
-        </div>
+        <CardOrganizer
+          key={item.id}
+          id={item.id}
+          picture={item.event_picture}
+          name={item.organizer_name}
+          description={item.description}
+        />
       ))
     ) : (
       <div className="font-bold text-2xl flex flex-col justify-center items-center mt-10">
@@ -66,7 +64,7 @@ const OrganizerView = () => {
           />
         </div>
       </div>
-      {printOrganizer()}
+      <div className="grid grid-cols-4 mt-10">{printOrganizer()}</div>
     </main>
   );
 };
