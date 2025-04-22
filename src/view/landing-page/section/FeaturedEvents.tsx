@@ -1,27 +1,27 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
 import { ArrowRight, CalendarIcon, MapPin } from "lucide-react";
 import Image from "next/image";
-import { format } from "date-fns";
-import * as React from "react";
-import { Badge } from "@/components/ui/badge";
 import CardEvent from "@/components/card/cardEvent";
 import Link from "next/link";
 import { apiCall } from "@/utils/apiHelper";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 const FeaturedEventSection = () => {
   const [data, setData] = useState<any[]>([]);
 
+  const searchParams = useSearchParams();
   const getEvents = async () => {
     try {
-      const response = await apiCall.get("/events/all");
+      const search = searchParams.get("search");
+      const location = searchParams.get("location");
+      const response = await apiCall.get("/events/all",{
+        params: {
+          search,
+          location
+        }
+      });
       setData(response.data);
     } catch (error) {
       console.log(error);
@@ -63,11 +63,11 @@ const FeaturedEventSection = () => {
 
   useEffect(() => {
     getEvents();
-  }, []);
+  }, [searchParams]);
   return (
-    <div className="px-4 py-8 md:py-16 md:px-20">
+    <div className="px-4 py-8 md:py-16 md:px-20" id="events">
       <div className="flex justify-between">
-        <h1 className="font-bold text-xl md:text-3xl">Featured Events</h1>
+        <h1 className="font-bold text-xl md:text-3xl" >Featured Events</h1>
         <Link href={"/events"}>
           <Button variant={"link"} className="cursor-pointer">
             View All <ArrowRight />
