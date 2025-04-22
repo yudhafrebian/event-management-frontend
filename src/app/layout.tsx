@@ -4,6 +4,8 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import Navbar from "@/components/core/Navbar";
 import Footer from "@/components/core/Footer";
+import { Store } from "lucide-react";
+import StoreProvider from "./storeProvider";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -23,12 +25,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={` ${poppins.variable} antialiased`}
-      >
-        <Toaster/>
+      <body className={` ${poppins.variable} antialiased`}>
+        <Toaster />
         <Navbar />
-        {children}
+        <StoreProvider>{children}</StoreProvider>
         <Footer />
       </body>
     </html>

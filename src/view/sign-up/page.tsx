@@ -11,12 +11,12 @@ import { apiCall } from "@/utils/apiHelper";
 
 const SignUp = () => {
   interface IFormValue {
-    firstname: string;
-    lastname: string;
+    first_name: string;
+    last_name: string;
     email: string;
     password: string;
     confPassword: string;
-    referal_code: string;
+    referral_code: string;
   }
 
   const [typePass, setTypePass] = React.useState<string>("password");
@@ -31,14 +31,16 @@ const SignUp = () => {
   const onSignUp = async (values: IFormValue) => {
     try {
       const response = await apiCall.post("/auth/register", {
-        first_name: values.firstname,
-        last_name: values.lastname,
+        first_name: values.first_name,
+        last_name: values.last_name,
         email: values.email,
         password: values.password,
-        referal_code: values.referal_code,
+        referral_code: values.referral_code,
       });
-      throw `Periksa email ${response.data.email} anda`;
+      // need fix alert response
+      throw `Periksa email ${values.email} anda`;
     } catch (error) {
+      // need proper error handling
       console.log(error);
       throw "error";
     }
@@ -54,12 +56,12 @@ const SignUp = () => {
           <CardContent>
             <Formik
               initialValues={{
-                firstname: "",
-                lastname: "",
+                first_name: "",
+                last_name: "",
                 email: "",
                 password: "",
                 confPassword: "",
-                referal_code: "",
+                referral_code: "",
               }}
               validationSchema={SignUpSchema}
               onSubmit={(values) => {
@@ -77,13 +79,13 @@ const SignUp = () => {
                     <div className="py-2 md:py-6 space-y-5">
                       <div className="flex gap-8">
                         <Input
-                          name="firstname"
+                          name="first_name"
                           type="text"
                           placeholder="First Name"
                           onChange={handleChange}
                         />
                         <Input
-                          name="lastname"
+                          name="last_name"
                           type="text"
                           placeholder="Last Name"
                           onChange={handleChange}
