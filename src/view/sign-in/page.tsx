@@ -51,9 +51,8 @@ const SignIn = () => {
             token: response.data.token,
           })
         );
-        console.log(response.data);
 
-        localStorage.setItem("auth", response.data.token);
+        localStorage.setItem("tkn", response.data.token);
         router.replace(`/events`);
         // need fix alert response
         throw "Sign in berhasil";

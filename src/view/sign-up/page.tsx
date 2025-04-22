@@ -8,6 +8,7 @@ import Link from "next/link";
 import { SignUpSchema } from "./schema/signUpSchema";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { apiCall } from "@/utils/apiHelper";
+import { useRouter } from "next/navigation";
 
 const SignUp = () => {
   interface IFormValue {
@@ -18,6 +19,8 @@ const SignUp = () => {
     confPassword: string;
     referral_code: string;
   }
+
+  const router = useRouter();
 
   const [typePass, setTypePass] = React.useState<string>("password");
   const onBtShowPass = () => {
@@ -37,6 +40,7 @@ const SignUp = () => {
         password: values.password,
         referral_code: values.referral_code,
       });
+      router.replace(`/events`);
       // need fix alert response
       throw `Periksa email ${values.email} anda`;
     } catch (error) {
