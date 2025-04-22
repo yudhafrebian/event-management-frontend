@@ -7,24 +7,35 @@ import Link from "next/link";
 import { apiCall } from "@/utils/apiHelper";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Card } from "@/components/ui/card";
+import CardLoader from "../Loading";
 
 const FeaturedEventSection = () => {
   const [data, setData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const searchParams = useSearchParams();
   const getEvents = async () => {
     try {
+      setLoading(true);
       const search = searchParams.get("search");
       const location = searchParams.get("location");
-      const response = await apiCall.get("/events/all",{
+      const from = searchParams.get("from");
+      const to = searchParams.get("to");
+      const response = await apiCall.get("/events/all", {
         params: {
           search,
-          location
-        }
+          location,
+          from,
+          to,
+        },
       });
       setData(response.data);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -67,7 +78,7 @@ const FeaturedEventSection = () => {
   return (
     <div className="px-4 py-8 md:py-16 md:px-20" id="events">
       <div className="flex justify-between">
-        <h1 className="font-bold text-xl md:text-3xl" >Featured Events</h1>
+        <h1 className="font-bold text-xl md:text-3xl">Featured Events</h1>
         <Link href={"/events"}>
           <Button variant={"link"} className="cursor-pointer">
             View All <ArrowRight />
@@ -75,7 +86,11 @@ const FeaturedEventSection = () => {
         </Link>
       </div>
       <div className="grid md:grid-cols-3 gap-4 md:gap-8 mt-4 md:mt-8">
-        {printCardList()}
+        {loading ? (
+          <CardLoader />
+        ) : (
+          printCardList()
+        )}
       </div>
     </div>
   );

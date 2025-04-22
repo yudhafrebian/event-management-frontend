@@ -13,8 +13,8 @@ const HeroSection: React.FunctionComponent<IHeroSectionProps> = (props) => {
             <h1>Discover Amazing</h1>
             <h1>Events Near You</h1>
           </div>
-          <p className=" text-sm md:text-lg text-white">
-            Join thousands of people who trust EventPro for discovering and
+          <p className=" text-sm md:text-lg text-white md:w-1/2">
+            Join thousands of people who trust Event Society for discovering and
             booking the best events.
           </p>
           <div className="flex gap-4">
