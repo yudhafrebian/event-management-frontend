@@ -25,12 +25,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={` ${poppins.variable} antialiased`}>
-        <Toaster />
-        <Navbar />
-        <StoreProvider>{children}</StoreProvider>
-        <Footer />
-      </body>
+      <StoreProvider>
+        <body className={` ${poppins.variable} antialiased`}>
+          <Toaster />
+          <Navbar />
+          {children}
+          <Footer />
+        </body>
+      </StoreProvider>
     </html>
   );
 }

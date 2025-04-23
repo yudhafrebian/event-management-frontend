@@ -12,6 +12,9 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { CirclePlus, Info, Menu, Phone, Search } from "lucide-react";
+import { apiCall } from "@/utils/apiHelper";
+import { useAppDispatch, useAppSelector } from "@/app/hook";
+import { setSignIn, setSignOut } from "@/lib/redux/features/authSlice";
 
 const Navbar: React.FunctionComponent = () => {
   const pathname = usePathname();
@@ -22,6 +25,43 @@ const Navbar: React.FunctionComponent = () => {
     { label: "Organizers", href: "/organizers", icon: <Phone /> },
     { label: "About", href: "/about", icon: <Info /> },
   ];
+
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => {
+    return state.authState;
+  });
+
+  const keepLogin = async () => {
+    try {
+      const token = localStorage.getItem("tkn");
+      if (token) {
+        const response = await apiCall.get(`/auth/keepLogin`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log("CHECK SIGNIN RESPONSE : ", response.data);
+        dispatch(
+          setSignIn({
+            id: response.data.id,
+            first_name: response.data.first_name,
+            last_name: response.data.last_name,
+            email: response.data.email,
+            token: response.data.token,
+          })
+        );
+        localStorage.setItem("tkn", response.data.token);
+      } else {
+        dispatch(setSignIn({ isAuth: false }));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  React.useEffect(() => {
+    keepLogin();
+  }, []);
 
   return (
     <div className="px-4 py-2 md:px-24 md:py-4 fixed z-50 w-full bg-white shadow">
@@ -70,14 +110,37 @@ const Navbar: React.FunctionComponent = () => {
             </DropdownMenu>
           </nav>
           <div className="flex gap-2">
-            <Link href={"/sign-in"}>
-              <Button variant={"ghost"} className="text-primary cursor-pointer">
-                Login
-              </Button>
-            </Link>
-            <Link href={"/sign-up"}>
-              <Button className="cursor-pointer">Sign Up</Button>
-            </Link>
+            {user.email ? (
+              <>
+                <span>
+                  <Link href="/profile">{user.email}</Link>
+                </span>
+                <Button
+                  className=" bg-blue-500 text-white"
+                  type="button"
+                  onClick={() => {
+                    dispatch(setSignOut());
+                    localStorage.removeItem("tkn");
+                  }}
+                >
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link href={"/sign-in"}>
+                  <Button
+                    variant={"ghost"}
+                    className="text-primary cursor-pointer"
+                  >
+                    Login
+                  </Button>
+                </Link>
+                <Link href={"/sign-up"}>
+                  <Button className="cursor-pointer">Sign Up</Button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
