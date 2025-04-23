@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import * as React from "react";
 import SearchBar from "./SearchBar";
+import Link from "next/link";
 
 interface IHeroSectionProps {}
 
@@ -18,6 +19,7 @@ const HeroSection: React.FunctionComponent<IHeroSectionProps> = (props) => {
             booking the best events.
           </p>
           <div className="flex gap-4">
+            <Link href={"/events"}>
             <Button
               className="cursor-pointer"
               variant={"secondary"}
@@ -25,6 +27,7 @@ const HeroSection: React.FunctionComponent<IHeroSectionProps> = (props) => {
             >
               Browse Events
             </Button>
+            </Link>
             <Button className="cursor-pointer" variant={"outline"} size={"lg"}>
               Create Event
             </Button>

@@ -16,7 +16,7 @@ const SearchBar = () => {
       params.delete("search");
     }
 
-    router.push(`/events?${params.toString()}#events`);
+    router.push(`/events?${params.toString()}`);
   };
 
   return (

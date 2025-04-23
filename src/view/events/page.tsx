@@ -28,6 +28,8 @@ import CardLoader from "./Loading";
 import CategoriesSelector from "@/components/filter/Categories";
 import SearchBar from "./section/SearchBar";
 import { useSearchParams } from "next/navigation";
+import axios from "axios";
+import LocationSelector from "@/components/filter/Location";
 
 const EventView = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -48,9 +50,13 @@ const EventView = () => {
     try {
       setLoading(true);
       const search = searchParams.get("search");
+      const category = searchParams.get("category");
+      const location = searchParams.get("location");
       const response = await apiCall.get("/events/all", {
         params: {
           search,
+          category,
+          location,
         },
       });
       setData(response.data);
@@ -61,6 +67,8 @@ const EventView = () => {
       setLoading(false);
     }
   };
+
+  
 
   const printEvents = () => {
     return data.length > 0 ? (
@@ -138,52 +146,8 @@ const EventView = () => {
         <SearchBar />
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-6">
           <CategoriesSelector />
-
-          <Popover open={openLocation} onOpenChange={setOpenLocation}>
-            <PopoverTrigger asChild>
-              <Button
-                variant={"outline2"}
-                role="combobox"
-                aria-expanded={openLocation}
-                className="justify-between cursor-pointer"
-              >
-                {valueLocation
-                  ? location.find((loc) => loc.value === valueLocation)?.label
-                  : "Location"}
-                <ChevronsUpDown />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent>
-              <Command>
-                <CommandList>
-                  <CommandInput placeholder="Search location..." />
-                  <CommandGroup>
-                    {location.map((loc) => (
-                      <CommandItem
-                        key={loc.value}
-                        value={loc.value}
-                        onSelect={(currentValue) => {
-                          setValueLocation(
-                            currentValue === valueLocation ? "" : currentValue
-                          );
-                          setOpenLocation(false);
-                        }}
-                      >
-                        {loc.label}
-                        <Check
-                          className={
-                            valueLocation === loc.value
-                              ? "opacity-100"
-                              : "opacity-0"
-                          }
-                        />
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                </CommandList>
-              </Command>
-            </PopoverContent>
-          </Popover>
+          <LocationSelector />
+          
 
           <Popover open={openPrice} onOpenChange={setOpenPrice}>
             <PopoverTrigger asChild>
