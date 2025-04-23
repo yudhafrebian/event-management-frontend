@@ -40,7 +40,7 @@ const Navbar: React.FunctionComponent = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log("CHECK SIGNIN RESPONSE : ", response.data);
+        console.log("Sign In Response: ", response.data);
         dispatch(
           setSignIn({
             id: response.data.id,
@@ -109,14 +109,16 @@ const Navbar: React.FunctionComponent = () => {
               </DropdownMenuContent>
             </DropdownMenu>
           </nav>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center justify-center">
             {user.email ? (
               <>
                 <span>
-                  <Link href="/profile">{user.email}</Link>
+                  {/* <Link href="/profile"> */}
+                  {user.first_name} {user.last_name}
+                  {/* </Link> */}
                 </span>
                 <Button
-                  className=" bg-blue-500 text-white"
+                  className="text-white"
                   type="button"
                   onClick={() => {
                     dispatch(setSignOut());
