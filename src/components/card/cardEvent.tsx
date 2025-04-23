@@ -66,7 +66,7 @@ const CardEvent: React.FunctionComponent<ICardEventProps> = (props) => {
               : "Free"}
           </Badge>
 
-          <Link href={`/events/${props.id}`}>
+          <Link href={`/events/${props.title}`}>
             <Button className="cursor-pointer">Book Now</Button>
           </Link>
         </div>

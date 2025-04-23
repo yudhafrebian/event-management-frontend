@@ -41,7 +41,7 @@ const CardOrganizer: React.FunctionComponent<ICardOrganizerProps> = (props) => {
       </CardContent>
       <CardFooter>
         <div className="flex justify-end w-full">
-          <Link href={`/organizers/${props.id}`}>
+          <Link href={`/organizers/${props.name}`}>
             <Button className="cursor-pointer">Visit Profile</Button>
           </Link>
         </div>

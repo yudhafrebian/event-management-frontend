@@ -48,8 +48,8 @@ const DetailEvent: React.FunctionComponent<IDetailEventProps> = (props) => {
   const [event, setEvent] = useState<IDetail | null>(null);
   const getEventDetail = async () => {
     try {
-      const eventId = await props.params;
-      const response = await apiCall.get(`/events/${eventId.slug}`);
+      const eventName = await props.params;
+      const response = await apiCall.get(`/events/${eventName.slug}`);
       setEvent(response.data);
     } catch (error) {
       console.log(error);

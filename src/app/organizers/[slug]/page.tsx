@@ -53,8 +53,8 @@ const DetailOrganizer: React.FunctionComponent<IDetailOrganizerProps> = (
   const [organizer, setOrganizer] = useState<IDetail | null>(null);
   const getOrganizerDetail = async () => {
     try {
-      const organizerId = await props.params;
-      const response = await apiCall.get(`/organizers/${organizerId.slug}`);
+      const organizerName = await props.params;
+      const response = await apiCall.get(`/organizers/${organizerName.slug}`);
       setOrganizer(response.data);
     } catch (error) {
       console.log(error);
@@ -94,7 +94,7 @@ const DetailOrganizer: React.FunctionComponent<IDetailOrganizerProps> = (
         <div className="w-2/3">
           <Card>
             <CardHeader>
-              <CardTitle>Organizer Events</CardTitle>
+              <CardTitle className="font-bold text-xl">Organizer Events</CardTitle>
             </CardHeader>
             <CardContent className="grid grid-cols-2 gap-8">{printEvents()}</CardContent>
           </Card>

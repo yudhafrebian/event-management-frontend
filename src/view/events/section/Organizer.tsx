@@ -34,7 +34,7 @@ const OrganizerSection: React.FunctionComponent<IOrganizerSectionProps> = (
             <p className="text-sm text-muted-foreground">{props.email}</p>
           </div>
         </div>
-        <Link href={`/organizers/${props.id}`}>
+        <Link href={`/organizers/${props.organizer_name}`}>
         <Button className="cursor-pointer" >Visit Organizer</Button>
         </Link>
       </CardContent>
