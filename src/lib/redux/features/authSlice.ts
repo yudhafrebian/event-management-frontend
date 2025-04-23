@@ -2,15 +2,15 @@ import { createSlice } from "@reduxjs/toolkit";
 
 interface IAuth {
   id: string;
-  firstname: string;
-  lastname: string;
+  first_name: string;
+  last_name: string;
   email: string;
 }
 
 const initialState: IAuth = {
   id: "",
-  firstname: "",
-  lastname: "",
+  first_name: "",
+  last_name: "",
   email: "",
 };
 
