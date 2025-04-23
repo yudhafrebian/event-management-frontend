@@ -25,6 +25,9 @@ import { apiCall } from "@/utils/apiHelper";
 import CardEvent from "@/components/card/cardEvent";
 import Image from "next/image";
 import CardLoader from "./Loading";
+import CategoriesSelector from "@/components/filter/Categories";
+import SearchBar from "./section/SearchBar";
+import { useSearchParams } from "next/navigation";
 
 const EventView = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -39,11 +42,17 @@ const EventView = () => {
   const [date, setDate] = useState<Date>();
   const [data, setData] = useState<any>([]);
   const [loading, setLoading] = useState(false);
+  const searchParams = useSearchParams();
 
   const getEvents = async () => {
     try {
       setLoading(true);
-      const response = await apiCall.get("/events/all");
+      const search = searchParams.get("search");
+      const response = await apiCall.get("/events/all", {
+        params: {
+          search,
+        },
+      });
       setData(response.data);
       console.log(response.data);
     } catch (error) {
@@ -81,32 +90,6 @@ const EventView = () => {
   };
 
   //temporary data
-  const categories = [
-    {
-      label: "Music",
-      value: "music",
-    },
-    {
-      label: "Tecnology",
-      value: "tecnology",
-    },
-    {
-      label: "Culinary",
-      value: "culinary",
-    },
-    {
-      label: "Arts",
-      value: "arts",
-    },
-    {
-      label: "Sports",
-      value: "sports",
-    },
-    {
-      label: "Education",
-      value: "education",
-    },
-  ];
 
   const location = [
     {
@@ -144,7 +127,7 @@ const EventView = () => {
 
   useEffect(() => {
     getEvents();
-  }, []);
+  }, [searchParams.toString()]);
 
   return (
     <div className=" px-4 py-12 md:px-20 md:py-16">
@@ -152,61 +135,9 @@ const EventView = () => {
         <h1 className="font-bold text-3xl">All Event</h1>
       </div>
       <div className="flex flex-col gap-8 mt-5">
-        <div className="relative">
-          <IoSearch
-            className="absolute left-2 top-1/2 -translate-y-1/2"
-            size={16}
-          />
-          <Input
-            className="pl-8"
-            type="search"
-            placeholder="Search events..."
-          />
-        </div>
+        <SearchBar />
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-6">
-          <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                variant={"outline2"}
-                role="combobox"
-                aria-expanded={open}
-                className="justify-between cursor-pointer"
-              >
-                {value
-                  ? categories.find((category) => category.value === value)
-                      ?.label
-                  : "Categories"}
-                <ChevronsUpDown />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent>
-              <Command>
-                <CommandList>
-                  <CommandGroup>
-                    {categories.map((category) => (
-                      <CommandItem
-                        key={category.value}
-                        value={category.value}
-                        onSelect={(currentValue) => {
-                          setValue(currentValue === value ? "" : currentValue);
-                          setOpen(false);
-                        }}
-                      >
-                        {category.label}
-                        <Check
-                          className={
-                            value === category.value
-                              ? "opacity-100"
-                              : "opacity-0"
-                          }
-                        />
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                </CommandList>
-              </Command>
-            </PopoverContent>
-          </Popover>
+          <CategoriesSelector />
 
           <Popover open={openLocation} onOpenChange={setOpenLocation}>
             <PopoverTrigger asChild>
@@ -373,7 +304,9 @@ const EventView = () => {
           </Popover>
         </div>
       </div>
-      <div className="grid grid-cols-4 mt-10 gap-4">{loading ? <CardLoader /> : printEvents() }</div>
+      <div className="grid grid-cols-4 mt-10 gap-4">
+        {loading ? <CardLoader /> : printEvents()}
+      </div>
     </div>
   );
 };
