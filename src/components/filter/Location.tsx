@@ -1,4 +1,3 @@
-"use client";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Button } from "../ui/button";
 import {
@@ -14,45 +13,46 @@ import { useEffect, useState } from "react";
 import { apiCall } from "@/utils/apiHelper";
 import { useRouter, useSearchParams } from "next/navigation";
 
-interface ICategoriesSelectorProps {
-}
+interface ILocationSelectorProps {}
 
-const CategoriesSelector: React.FunctionComponent<ICategoriesSelectorProps> = (
+const LocationSelector: React.FunctionComponent<ILocationSelectorProps> = (
   props
 ) => {
   const searchParams = useSearchParams();
-  const router = useRouter()
+  const router = useRouter();
 
   const [open, setOpen] = useState<boolean>(false);
   const [value, setValue] = useState<string>(
-    searchParams.get("category") || ""
+    searchParams.get("location") || ""
   );
-  const [categories, setCategories] = useState<string[]>([]);
+  const [location, setLocation] = useState<{ city: string; country: string }[]>(
+    []
+  );
 
-  const getCategories = async () => {
+  const getLocation = async () => {
     try {
-      const response = await apiCall.get("/events/categories");
-      setCategories(response.data);
+      const response = await apiCall.get("/events/locations");
+      setLocation(response.data);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleCategoryChange = (category: string) => {
+  const handleLocationChange = (location: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    if (category === value) {
-      params.delete("category");
+    if (location === value) {
+      params.delete("location");
       setValue("");
     } else {
-      params.set("category", category);
-      setValue(category);
+      params.set("location", location);
+      setValue(location);
     }
-    router.push(`/events?${params.toString()}#events`);
+    router.push(`/events?${params.toString()}`);
   };
-
   useEffect(() => {
-    getCategories();
+    getLocation();
   }, []);
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -63,28 +63,40 @@ const CategoriesSelector: React.FunctionComponent<ICategoriesSelectorProps> = (
           className="justify-between cursor-pointer"
         >
           {value
-            ? categories.find((category) => category === value)
-            : "Categories"}
+            ? location.find((loc) => loc.city === value)?.city
+            : "Location"}
           <ChevronsUpDown />
         </Button>
       </PopoverTrigger>
       <PopoverContent>
         <Command>
           <CommandList>
+            <CommandInput placeholder="Search location..." />
             <CommandGroup>
-              {categories.map((category) => (
+              <CommandItem
+                className="my-1"
+                onSelect={(currentValue) => {
+                  handleLocationChange("");
+                  setValue(currentValue === value ? "" : currentValue);
+                  setOpen(false);
+                }}
+              >
+                {value}
+              </CommandItem>
+              {location.map((loc) => (
                 <CommandItem
-                  key={category}
-                  value={category}
+                  id={loc.city}
+                  key={loc.city}
+                  value={loc.city}
                   onSelect={(currentValue) => {
-                    handleCategoryChange(category);
+                    handleLocationChange(loc.city);
                     setValue(currentValue === value ? "" : currentValue);
                     setOpen(false);
                   }}
                 >
-                  {category}
+                  {loc.city}
                   <Check
-                    className={value === category ? "opacity-100" : "opacity-0"}
+                    className={value === loc.city ? "opacity-100" : "opacity-0"}
                   />
                 </CommandItem>
               ))}
@@ -96,4 +108,4 @@ const CategoriesSelector: React.FunctionComponent<ICategoriesSelectorProps> = (
   );
 };
 
-export default CategoriesSelector;
+export default LocationSelector;
