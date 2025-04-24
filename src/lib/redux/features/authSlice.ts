@@ -5,6 +5,8 @@ interface IAuth {
   first_name: string;
   last_name: string;
   email: string;
+  is_verified: boolean;
+  role: string;
 }
 
 const initialState: IAuth = {
@@ -12,6 +14,8 @@ const initialState: IAuth = {
   first_name: "",
   last_name: "",
   email: "",
+  is_verified: false,
+  role: "user",
 };
 
 const authSlice = createSlice({
