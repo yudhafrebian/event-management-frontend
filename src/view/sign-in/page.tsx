@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/app/hook";
 import { apiCall } from "@/utils/apiHelper";
 import { setSignIn } from "@/lib/redux/features/authSlice";
+import { toast } from "react-toastify";
 
 const SignIn = () => {
   interface IUserValue {
@@ -49,20 +50,22 @@ const SignIn = () => {
             last_name: response.data.last_name,
             email: response.data.email,
             token: response.data.token,
+            is_verified: response.data.is_verified,
+            role: response.data.role,
           })
         );
 
         localStorage.setItem("tkn", response.data.token);
-        router.replace(`/events`);
+        router.replace(`/`);
         // need fix alert response
-        throw "Sign in berhasil";
+        toast("Sign in berhasil");
       } else {
-        throw "Akun tidak ditemukan";
+        toast("Akun tidak ditemukan");
       }
     } catch (error) {
       console.log(error);
 
-      throw "error";
+      toast("error");
     }
   };
 

@@ -1,4 +1,5 @@
 "use client";
+
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -9,6 +10,20 @@ import { SignUpSchema } from "./schema/signUpSchema";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { apiCall } from "@/utils/apiHelper";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Check, ChevronsDown } from "lucide-react";
+import {
+  Command,
+  CommandGroup,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { cn } from "@/lib/utils";
 
 const SignUp = () => {
   interface IFormValue {
@@ -18,6 +33,7 @@ const SignUp = () => {
     password: string;
     confPassword: string;
     referral_code: string;
+    role: string;
   }
 
   const router = useRouter();
@@ -39,16 +55,18 @@ const SignUp = () => {
         email: values.email,
         password: values.password,
         referral_code: values.referral_code,
+        role: values.role,
       });
-      router.replace(`/events`);
-      // need fix alert response
-      throw `Periksa email ${values.email} anda`;
+      router.replace(`/sign-in`);
+
+      toast(`Periksa email ${values.email} anda`);
     } catch (error) {
-      // need proper error handling
       console.log(error);
-      throw "error";
+      toast("error");
     }
   };
+
+  const [open, setOpen] = React.useState(false);
 
   return (
     <div className="bg-gradient-to-r from-[#8B5CF6] to-[#3B82F6] flex rounded h-screen py-36 text-black p-3">
@@ -66,22 +84,37 @@ const SignUp = () => {
                 password: "",
                 confPassword: "",
                 referral_code: "",
+                role: "",
               }}
               validationSchema={SignUpSchema}
               onSubmit={(values) => {
-                // onSugnUp function not working yet
-                // formik not show error at front end
                 console.log("Data from input", values);
+
+                // formik not show error at front end
                 onSignUp(values);
               }}
             >
               {(props: FormikProps<IFormValue>) => {
                 const { errors, handleChange } = props;
+                const [roleValue, setRoleValue] = React.useState("");
+                props.values.role = roleValue;
+
+                const roles = [
+                  {
+                    value: "user",
+                    label: "User",
+                  },
+                  {
+                    value: "organizer",
+                    label: "Organizer",
+                  },
+                ];
+
                 console.log("Error from yup", errors);
                 return (
                   <Form>
                     <div className="py-2 md:py-6 space-y-5">
-                      <div className="flex gap-8">
+                      <div className="flex gap-2">
                         <Input
                           name="first_name"
                           type="text"
@@ -139,12 +172,64 @@ const SignUp = () => {
                           )}
                         </Button>
                       </div>
+                      <Popover open={open} onOpenChange={setOpen}>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            aria-expanded={open}
+                            className="text-black font-normal"
+                          >
+                            {roleValue
+                              ? roles.find(
+                                  (framework) => framework.value === roleValue
+                                )?.label
+                              : "Role"}
+                            <ChevronsDown />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent>
+                          <Command>
+                            <CommandList>
+                              <CommandGroup>
+                                {roles.map((framework) => (
+                                  <CommandItem
+                                    key={framework.value}
+                                    value={framework.value}
+                                    onSelect={(currentValue) => {
+                                      setRoleValue(
+                                        currentValue === roleValue
+                                          ? ""
+                                          : currentValue
+                                      );
+
+                                      setOpen(false);
+                                    }}
+                                    onChange={handleChange}
+                                  >
+                                    <Check
+                                      className={cn(
+                                        "mr-2 h-4 w-4",
+                                        roleValue === framework.value
+                                          ? "opacity-100"
+                                          : "opacity-0"
+                                      )}
+                                    />
+                                    {framework.label}
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
                       <Input
                         name="ref code"
                         type="text"
                         placeholder="Referal Code"
                         onChange={handleChange}
                       />
+
                       <div className="flex gap-4">
                         <Button type="submit" className="text-white">
                           Sign Up

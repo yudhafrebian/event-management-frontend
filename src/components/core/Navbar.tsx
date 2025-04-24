@@ -48,6 +48,8 @@ const Navbar: React.FunctionComponent = () => {
             last_name: response.data.last_name,
             email: response.data.email,
             token: response.data.token,
+            is_verified: response.data.is_verified,
+            role: response.data.role,
           })
         );
         localStorage.setItem("tkn", response.data.token);
