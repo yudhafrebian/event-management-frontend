@@ -98,22 +98,6 @@ const EventView = () => {
   };
 
   //temporary data
-
-  const location = [
-    {
-      label: "New York",
-      value: "new_york",
-    },
-    {
-      label: "Los Angeles",
-      value: "los_angeles",
-    },
-    {
-      label: "Bali",
-      value: "bali",
-    },
-  ];
-
   const sort = [
     {
       label: "Newest",
@@ -147,7 +131,6 @@ const EventView = () => {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-6">
           <CategoriesSelector />
           <LocationSelector />
-          
 
           <Popover open={openPrice} onOpenChange={setOpenPrice}>
             <PopoverTrigger asChild>
