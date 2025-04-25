@@ -10,7 +10,7 @@ import { SignUpSchema } from "./schema/signUpSchema";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { apiCall } from "@/utils/apiHelper";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
+
 import {
   Popover,
   PopoverContent,
@@ -24,6 +24,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 const SignUp = () => {
   interface IFormValue {
@@ -90,11 +91,11 @@ const SignUp = () => {
               onSubmit={(values) => {
                 console.log("Data from input", values);
 
-                // formik not show error at front end
                 onSignUp(values);
               }}
             >
               {(props: FormikProps<IFormValue>) => {
+                // formik not show error at front end
                 const { errors, handleChange } = props;
                 const [roleValue, setRoleValue] = React.useState("");
                 props.values.role = roleValue;
@@ -223,12 +224,18 @@ const SignUp = () => {
                           </Command>
                         </PopoverContent>
                       </Popover>
-                      <Input
-                        name="ref code"
-                        type="text"
-                        placeholder="Referal Code"
-                        onChange={handleChange}
-                      />
+                      {roleValue === "organizer" ? (
+                        <></>
+                      ) : (
+                        <>
+                          <Input
+                            name="referral_code"
+                            type="text"
+                            placeholder="Referal Code"
+                            onChange={handleChange}
+                          />
+                        </>
+                      )}
 
                       <div className="flex gap-4">
                         <Button type="submit" className="text-white">

@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/app/hook";
 import { apiCall } from "@/utils/apiHelper";
 import { setSignIn } from "@/lib/redux/features/authSlice";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 const SignIn = () => {
   interface IUserValue {
@@ -57,7 +57,7 @@ const SignIn = () => {
 
         localStorage.setItem("tkn", response.data.token);
         router.replace(`/`);
-        // need fix alert response
+
         toast("Sign in berhasil");
       } else {
         toast("Akun tidak ditemukan");
