@@ -4,7 +4,6 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import Navbar from "@/components/core/Navbar";
 import Footer from "@/components/core/Footer";
-import { Store } from "lucide-react";
 import StoreProvider from "./storeProvider";
 
 const poppins = Poppins({

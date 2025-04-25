@@ -56,8 +56,8 @@ const SignIn = () => {
         );
 
         localStorage.setItem("tkn", response.data.token);
-        router.replace(`/`);
-
+        router.replace(`/dashboard`);
+        // need fix alert response
         toast("Sign in berhasil");
       } else {
         toast("Akun tidak ditemukan");
