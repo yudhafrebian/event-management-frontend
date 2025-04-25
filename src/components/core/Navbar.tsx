@@ -3,7 +3,7 @@
 import Link from "next/link";
 import * as React from "react";
 import { Button } from "../ui/button";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,6 +18,7 @@ import { setSignIn, setSignOut } from "@/lib/redux/features/authSlice";
 
 const Navbar: React.FunctionComponent = () => {
   const pathname = usePathname();
+  const router = useRouter()
 
   const navLinks = [
     { label: "Browse Event", href: "/events", icon: <Search /> },
@@ -134,6 +135,7 @@ const Navbar: React.FunctionComponent = () => {
                   onClick={() => {
                     dispatch(setSignOut());
                     localStorage.removeItem("tkn");
+                    router.replace("/"); 
                   }}
                 >
                   Sign Out

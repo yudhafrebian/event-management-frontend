@@ -1,12 +1,14 @@
 import { CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import * as React from "react";
+import Link from "next/link";
 
 interface ITicketTypeContentProps {
+  slug: string;
   type_name: string;
   price: number;
   quota: number;
-  description:string;
+  description: string;
 }
 
 const TicketTypeContent: React.FunctionComponent<ITicketTypeContentProps> = (
@@ -26,10 +28,12 @@ const TicketTypeContent: React.FunctionComponent<ITicketTypeContentProps> = (
           </p>
         </div>
         <div className="text-[#4B5563] mt-2 mb-4">
-            <p>{props.description}</p>
+          <p>{props.description}</p>
         </div>
         <div className="flex justify-between">
-          <Button className="cursor-pointer">Buy</Button>
+          <Link href={`/events/${props.slug}/${props.type_name}`}>
+            <Button className="cursor-pointer">Buy</Button>
+          </Link>
           <p className="font-semibold">Quota : {props.quota}</p>
         </div>
       </div>
