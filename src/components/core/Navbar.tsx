@@ -21,7 +21,7 @@ const Navbar: React.FunctionComponent = () => {
 
   const navLinks = [
     { label: "Browse Event", href: "/events", icon: <Search /> },
-    { label: "Create Event", href: "/create-event", icon: <CirclePlus /> },
+    // { label: "Create Event", href: "/create-event", icon: <CirclePlus /> },
     { label: "Organizers", href: "/organizers", icon: <Phone /> },
     { label: "About", href: "/about", icon: <Info /> },
   ];
@@ -73,21 +73,30 @@ const Navbar: React.FunctionComponent = () => {
             <p>LOGO</p>
           </Link>
         </div>
-        <div className="flex md:flex-row flex-row-reverse justify-between items-center gap-2 md:gap-0 md:w-2/3">
-          <nav>
-            <ul className="md:flex gap-8 text-muted-foreground hidden">
-              {navLinks.map((link) => (
-                <li
-                  key={link.href}
-                  className={`hover:text-primary ${
-                    pathname === link.href ? "text-primary font-semibold" : ""
-                  }`}
-                >
-                  <Link href={link.href}>{link.label}</Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
+        <div
+          className={`flex md:flex-row flex-row-reverse justify-between items-center gap-2 md:gap-0 ${
+            user.role === "organizer" ? "" : "md:w-[60%]"
+          }`}
+        >
+          {user.role === "organizer" ? (
+            ""
+          ) : (
+            <nav>
+              <ul className="md:flex gap-8 text-muted-foreground hidden justify-center">
+                {navLinks.map((link) => (
+                  <li
+                    key={link.href}
+                    className={`hover:text-primary ${
+                      pathname === link.href ? "text-primary font-semibold" : ""
+                    }`}
+                  >
+                    <Link href={link.href}>{link.label}</Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )}
+
           <nav className="md:hidden">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -111,7 +120,7 @@ const Navbar: React.FunctionComponent = () => {
               </DropdownMenuContent>
             </DropdownMenu>
           </nav>
-          <div className="flex gap-2 items-center justify-center">
+          <div className="flex gap-2 items-center">
             {user.email ? (
               <>
                 <span>

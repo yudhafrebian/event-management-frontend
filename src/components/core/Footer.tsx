@@ -22,9 +22,6 @@ const Footer = () => {
               <Link className="hover:text-primary" href={"#"}>Browse Events</Link>
             </li>
             <li className="mt-2">
-              <Link className="hover:text-primary" href={"#"}>Create Event</Link>
-            </li>
-            <li className="mt-2">
               <Link className="hover:text-primary" href={"#"}>About</Link>
             </li>
             <li className="mt-2">
