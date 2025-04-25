@@ -98,6 +98,7 @@ const DetailEvent: React.FunctionComponent<IDetailEventProps> = (props) => {
             {event?.detail.ticket_types?.map((ticket) => (
               <TicketTypesSection
                 key={ticket.id}
+                slug={event?.detail.title || ""}
                 type_name={ticket.type_name}
                 price={ticket.price}
                 quota={ticket.quota}

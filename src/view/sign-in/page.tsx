@@ -56,7 +56,12 @@ const SignIn = () => {
         );
 
         localStorage.setItem("tkn", response.data.token);
-        router.replace(`/dashboard`);
+
+        if (response.data.role === "organizer") {
+          router.replace(`/dashboard`);
+        } else {
+          router.replace(`/`);
+        }
         // need fix alert response
         toast("Sign in berhasil");
       } else {
