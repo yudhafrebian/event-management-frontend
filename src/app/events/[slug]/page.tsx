@@ -87,7 +87,7 @@ const DetailEvent: React.FunctionComponent<IDetailEventProps> = (props) => {
       <div className="flex px-24 py-8 gap-8">
         <div className="flex flex-col w-2/3 gap-8">
           <AboutSection
-            about={event?.detail.about || ""}
+            description={event?.detail.description || ""}
             seats={event?.quota || 0}
             price={renderPrice()}
           />
