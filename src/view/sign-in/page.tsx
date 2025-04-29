@@ -52,6 +52,7 @@ const SignIn = () => {
             token: response.data.token,
             is_verified: response.data.is_verified,
             role: response.data.role,
+            points: response.data.points
           })
         );
 
@@ -63,7 +64,7 @@ const SignIn = () => {
           router.replace(`/`);
         }
         // need fix alert response
-        toast("Sign in berhasil");
+        toast.success("Sign in Success");
       } else {
         toast("Akun tidak ditemukan");
       }

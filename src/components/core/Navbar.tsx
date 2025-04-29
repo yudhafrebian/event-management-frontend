@@ -72,7 +72,7 @@ const Navbar: React.FunctionComponent = () => {
     <div className="px-4 py-2 md:px-24 md:py-4 fixed z-50 w-full bg-white shadow">
       <div className="flex justify-between items-center">
         <div>
-          <Link href={"/"} className="cursor-pointer">
+          <Link href={user.role === "organizer" ? "/dashboard" : "/"}>
             <p>LOGO</p>
           </Link>
         </div>

@@ -8,7 +8,7 @@ import {
 import * as React from "react";
 
 interface IAboutSectionProps {
-  about: string;
+  description: string;
   seats: number;
   price: any;
 }
@@ -18,7 +18,7 @@ const AboutSection: React.FunctionComponent<IAboutSectionProps> = (props) => {
     <Card>
       <CardHeader>
         <CardTitle className="font-bold text-2xl">About This Event</CardTitle>
-        <CardDescription>{props.about}</CardDescription>
+        <CardDescription>{props.description}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex gap-4">
