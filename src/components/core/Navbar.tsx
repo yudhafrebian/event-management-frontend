@@ -18,7 +18,7 @@ import { setSignIn, setSignOut } from "@/lib/redux/features/authSlice";
 
 const Navbar: React.FunctionComponent = () => {
   const pathname = usePathname();
-  const router = useRouter()
+  const router = useRouter();
 
   const navLinks = [
     { label: "Browse Event", href: "/events", icon: <Search /> },
@@ -51,6 +51,8 @@ const Navbar: React.FunctionComponent = () => {
             token: response.data.token,
             is_verified: response.data.is_verified,
             role: response.data.role,
+            code: response.data.code,
+            points: response.data.points,
           })
         );
         localStorage.setItem("tkn", response.data.token);
@@ -70,7 +72,7 @@ const Navbar: React.FunctionComponent = () => {
     <div className="px-4 py-2 md:px-24 md:py-4 fixed z-50 w-full bg-white shadow">
       <div className="flex justify-between items-center">
         <div>
-          <Link href={"/"}>
+          <Link href={"/"} className="cursor-pointer">
             <p>LOGO</p>
           </Link>
         </div>
@@ -125,17 +127,17 @@ const Navbar: React.FunctionComponent = () => {
             {user.email ? (
               <>
                 <span>
-                  {/* <Link href="/profile"> */}
-                  {user.first_name} {user.last_name}
-                  {/* </Link> */}
+                  <Link href="/profile">
+                    {user.first_name} {user.last_name}
+                  </Link>
                 </span>
                 <Button
-                  className="text-white"
+                  className="text-white cursor-pointer"
                   type="button"
                   onClick={() => {
                     dispatch(setSignOut());
                     localStorage.removeItem("tkn");
-                    router.replace("/"); 
+                    router.replace("/");
                   }}
                 >
                   Sign Out
