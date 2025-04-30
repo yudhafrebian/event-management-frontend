@@ -1,11 +1,14 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { apiCall } from "@/utils/apiHelper";
 import AboutSection from "@/view/events/section/About";
+import CheckoutSection from "@/view/events/section/Checkout";
 import HeroSection from "@/view/events/section/Hero";
 import OrganizerSection from "@/view/events/section/Organizer";
 import TicketTypesSection from "@/view/events/section/TicketTypes";
+import { ShoppingCart } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface IDetailEventProps {
@@ -14,7 +17,7 @@ interface IDetailEventProps {
 
 interface IDetail {
   detail: {
-    id: string;
+    id: number;
     organizer_id: string;
     event_picture: string;
     title: string;
@@ -37,7 +40,7 @@ interface IDetail {
       type_name: string;
       price: number;
       quota: number;
-      description:string
+      description: string;
     }[];
   };
   price: any;
@@ -65,7 +68,6 @@ const DetailEvent: React.FunctionComponent<IDetailEventProps> = (props) => {
     }
 
     const min = prices[0];
-    console.log(prices);
     const max = prices[prices.length - 1];
     return `Rp${min.toLocaleString("id-ID")} - Rp${max.toLocaleString(
       "id-ID"
@@ -107,12 +109,21 @@ const DetailEvent: React.FunctionComponent<IDetailEventProps> = (props) => {
             ))}
           </Card>
         </div>
-        <div className="flex flex-col w-1/3">
+        <div className="flex flex-col w-1/3 gap-8">
           <OrganizerSection
             id={event?.detail.organizer.id || ""}
             profile_picture={event?.detail.organizer.profile_img || ""}
             organizer_name={event?.detail.organizer.organizer_name || ""}
             email={event?.detail.organizer.description || ""}
+          />
+          <CheckoutSection
+            event_id={event?.detail.id || 0}
+            event_name={event?.detail.title || ""}
+            start_date={event?.detail.start_date || new Date()}
+            end_date={event?.detail.end_date || new Date()}
+            location={event?.detail.location || ""}
+            event_picture={event?.detail.event_picture || ""}
+            ticket_types={event?.detail.ticket_types || []}
           />
         </div>
       </div>
