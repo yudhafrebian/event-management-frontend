@@ -114,7 +114,7 @@ const SignIn = () => {
                         />
                         <Button
                           type="button"
-                          className="shadow-none p-0"
+                          className="shadow-none p-0 cursor-pointer"
                           onClick={onBtShowPass}
                         >
                           {typePass === "password" ? (
@@ -126,7 +126,10 @@ const SignIn = () => {
                       </div>
 
                       <div className="flex gap-4">
-                        <Button type="submit" className="text-white">
+                        <Button
+                          type="submit"
+                          className="text-white cursor-pointer"
+                        >
                           Sign In
                         </Button>
                       </div>

@@ -144,7 +144,7 @@ const SignUp = () => {
                         />
                         <Button
                           type="button"
-                          className="shadow-none p-0"
+                          className="shadow-none p-0 cursor-pointer"
                           onClick={onBtShowPass}
                         >
                           {typePass === "password" ? (
@@ -163,7 +163,7 @@ const SignUp = () => {
                         />
                         <Button
                           type="button"
-                          className="shadow-none p-0"
+                          className="shadow-none p-0 cursor-pointer"
                           onClick={onBtShowPass}
                         >
                           {typePass === "password" ? (
@@ -179,7 +179,7 @@ const SignUp = () => {
                             variant="outline"
                             role="combobox"
                             aria-expanded={open}
-                            className="text-black font-normal"
+                            className="text-black font-normal cursor-pointer"
                           >
                             {roleValue
                               ? roles.find(
@@ -238,7 +238,10 @@ const SignUp = () => {
                       )}
 
                       <div className="flex gap-4">
-                        <Button type="submit" className="text-white">
+                        <Button
+                          type="submit"
+                          className="text-white cursor-pointer"
+                        >
                           Sign Up
                         </Button>
                       </div>
