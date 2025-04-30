@@ -4,7 +4,9 @@ interface IAuth {
   id: string;
   first_name: string;
   last_name: string;
+  profile_img: string;
   email: string;
+  password?: string;
   is_verified: boolean;
   role: string;
   code: string;
@@ -15,7 +17,9 @@ const initialState: IAuth = {
   id: "",
   first_name: "",
   last_name: "",
+  profile_img: "",
   email: "",
+  password: "",
   is_verified: false,
   role: "user",
   code: "",
