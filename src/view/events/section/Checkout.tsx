@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { useState, useMemo, useEffect } from "react";
 import { Input } from "@/components/ui/input";
-import { v4 as uuidv4 } from "uuid";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { apiCall } from "@/utils/apiHelper";
 
@@ -34,6 +34,7 @@ interface ICheckoutSectionProps {
 const CheckoutSection: React.FunctionComponent<ICheckoutSectionProps> = (
   props
 ) => {
+  const router = useRouter();
   const [amounts, setAmounts] = useState<number[]>([]);
 
   const handleTicketAmount = (index: number, value: number) => {
@@ -107,9 +108,8 @@ const CheckoutSection: React.FunctionComponent<ICheckoutSectionProps> = (
         }
       })
 
-
       toast.success("Transaction created successfully");
-      console.log("Transaction Success: ", response.data);
+      router.push("/profile/transactions");
     } catch (error) {
       console.log(error);
     }
