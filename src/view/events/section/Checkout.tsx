@@ -59,8 +59,10 @@ const CheckoutSection: React.FunctionComponent<ICheckoutSectionProps> = (
       const response = await apiCall.get(`/vouchers/${voucherCode}`);
 
       setVoucherData(response.data);
-    } catch (error) {
-      toast.error("Voucher not found");
+    } catch (error: any) {
+      setVoucherData(null);
+      const message = error?.response?.data?.message ?? "Invalid voucher code";
+      toast.error(message);
       console.log(error);
     }
   };
@@ -213,9 +215,17 @@ const CheckoutSection: React.FunctionComponent<ICheckoutSectionProps> = (
                   <Input
                     placeholder="Enter voucher code"
                     value={voucherCode}
-                    onChange={(e) => setVoucherCode(e.target.value.toUpperCase())}
+                    onChange={(e) =>
+                      setVoucherCode(e.target.value.toUpperCase())
+                    }
                   />
-                  <Button type="button" className="cursor-pointer" onClick={getVoucher}>Apply</Button>
+                  <Button
+                    type="button"
+                    className="cursor-pointer"
+                    onClick={getVoucher}
+                  >
+                    Apply
+                  </Button>
                 </div>
                 <div className="flex items-center gap-4">
                   {voucherData && (
@@ -228,7 +238,14 @@ const CheckoutSection: React.FunctionComponent<ICheckoutSectionProps> = (
                     />
                   )}
                   {voucherData && (
-                    <Button type="button" className="cursor-pointer" variant={"destructive"} onClick={() => setVoucherData(null)}>Remove</Button>
+                    <Button
+                      type="button"
+                      className="cursor-pointer"
+                      variant={"destructive"}
+                      onClick={() => setVoucherData(null)}
+                    >
+                      Remove
+                    </Button>
                   )}
                 </div>
               </div>

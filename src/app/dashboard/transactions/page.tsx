@@ -1,3 +1,4 @@
+import DashboardTransactionsView from '@/view/dashboard/transactions/page';
 import * as React from 'react';
 
 interface IEventPageProps {
@@ -5,8 +6,8 @@ interface IEventPageProps {
 
 const EventPage: React.FunctionComponent<IEventPageProps> = (props) => {
   return (
-    <div className='pt-20'>
-        <h1>Transactions</h1>
+    <div className='px-10 py-20'>
+        <DashboardTransactionsView />
     </div>
   )
 };

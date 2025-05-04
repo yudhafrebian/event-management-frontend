@@ -20,7 +20,7 @@ interface ICardVoucherProps {
 
 const CardVoucher: React.FunctionComponent<ICardVoucherProps> = (props) => {
   return (
-    <Card className="w-2/3 py-2">
+    <Card className="w-2/3 py-2 bg-primary/10">
       <CardContent>
         <div className="flex justify-between">
           <h4 className="font-bold ">{props.code}</h4>
