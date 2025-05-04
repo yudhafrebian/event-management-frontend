@@ -2,8 +2,8 @@
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { useAppSelector } from "@/app/hook";
-import axios from "axios";
 import { Input } from "@/components/ui/input";
+import { apiCall } from "@/utils/apiHelper";
 
 const Profile: React.FC = () => {
   const user = useAppSelector((state) => {
@@ -12,24 +12,31 @@ const Profile: React.FC = () => {
   console.log("user", user);
 
   const [typeEdit, setTypeEdit] = React.useState<string>("text");
+  const [isModified, setIsModified] = React.useState(false);
 
   const onBtEdit = () => {
     if (typeEdit === "editting") {
       setTypeEdit("text");
+      setIsModified(false); // Reset modification state when canceling
     } else if (typeEdit === "text") {
       setTypeEdit("editting");
     }
   };
 
   const [imagePreview, setImagePreview] = React.useState<string>(
-    "https://via.placeholder.com/150"
+    user.profile_img
   );
   const [upalodFile, setUploadFile] = React.useState<File | null>(null);
+
+  const [updatedUser, setUpdatedUser] = React.useState({
+    firstName: user.first_name,
+    lastName: user.last_name,
+  });
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     console.log(file);
-
+    setIsModified(true);
     if (file) {
       setUploadFile(file);
       const reader = new FileReader();
@@ -39,29 +46,47 @@ const Profile: React.FC = () => {
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const userName = event.target.value;
-    console.log(userName);
+    const { placeholder, value } = event.target;
+    setIsModified(true); // Mark as modified when input changes
+    if (placeholder === "First Name") {
+      setUpdatedUser((prev) => ({ ...prev, firstName: value }));
+    } else if (placeholder === "Last Name") {
+      setUpdatedUser((prev) => ({ ...prev, lastName: value }));
+    }
   };
 
   const handleUpload = async () => {
     try {
-      // how to upload all updated data at once
-
       const formData = new FormData();
-      // if (!upalodFile) {
-      //   throw "No file selected";
-      // }
-      // formData.append("img", upalodFile);
+
+      // Append the updated user data
+      formData.append("first_name", updatedUser.firstName);
+      formData.append("last_name", updatedUser.lastName);
+
+      // Append the uploaded file if it exists
+      if (upalodFile) {
+        formData.append("img", upalodFile);
+      }
+
       const token = localStorage.getItem("tkn");
-      const res = await axios.patch("/auth/profile-img-cloud", formData, {
+
+      console.log(formData.get("img"));
+      console.log(formData.get("first_name"));
+      console.log(formData.get("last_name"));
+
+      const res = await apiCall.patch("/auth/updateProfile", formData, {
+        // ERROR SERVER RECEIVED UNDEFINED DATA
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
         },
       });
+      console.log(res);
 
       alert("Profile updated successfully!");
     } catch (error) {
       console.log(error);
+      alert("Failed to update profile.");
     }
   };
 
@@ -72,25 +97,28 @@ const Profile: React.FC = () => {
         <div className="py-4">
           {typeEdit === "text" ? (
             <>
-              <img
-                src={user.profile_img}
-                alt="ProfImg"
-                style={{
-                  textAlign: "center",
-                  width: "150px",
-                  height: "150px",
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                  marginBottom: "10px",
-                  border: "2px solid #ccc",
-                }}
-              />
+              {user.profile_img ? (
+                <img
+                  src={user.profile_img}
+                  alt="ProfImg"
+                  style={{
+                    textAlign: "center",
+                    width: "150px",
+                    height: "150px",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    marginBottom: "10px",
+                    border: "2px solid #ccc",
+                  }}
+                />
+              ) : (
+                <p>Loading</p> // Placeholder text or spinner
+              )}
             </>
           ) : (
             <>
               <img
                 src={imagePreview}
-                defaultValue={user.profile_img}
                 alt="ProfImgEdit"
                 style={{
                   textAlign: "center",
@@ -102,7 +130,7 @@ const Profile: React.FC = () => {
                   border: "2px solid #ccc",
                 }}
               />
-              <div>
+              <div className="py-4">
                 <Input
                   id="profileImage"
                   type="file"
@@ -115,11 +143,15 @@ const Profile: React.FC = () => {
           )}
 
           <div>
-            <Button type="button" onClick={onBtEdit}>
+            <Button
+              type="button"
+              onClick={isModified ? handleUpload : onBtEdit}
+            >
               {typeEdit === "text"
                 ? "Edit Profile"
-                : // Request ? "Save":
-                  "Cancel"}
+                : isModified
+                ? "Update Profile"
+                : "Cancel"}
             </Button>
           </div>
         </div>
