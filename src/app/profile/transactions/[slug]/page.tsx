@@ -17,6 +17,10 @@ interface IDetail {
     invoice_id: string;
     status: string;
     created_at: Date;
+    total_price: number;
+    sub_total: number;
+    point_discount: number;
+    voucher_discount: number;
     events: {
       id: number;
       title: string;
@@ -76,11 +80,14 @@ const PaymentPage: React.FunctionComponent<IPaymentPageProps> = (props) => {
               )?.price || 0),
           })) || []
         }
-        total_price={detail?.totalPrice || 0}
+        total_price={detail?.transaction.total_price || 0}
         invoice_id={detail?.transaction.invoice_id || ""}
         status={detail?.transaction.status || ""}
         tranasaction_date={detail?.transaction.created_at || new Date()}
         expired_hours={detail?.transaction.expired_hours || new Date()}
+        sub_total={detail?.transaction.sub_total || 0}
+        point_discount={detail?.transaction.point_discount || 0}
+        voucher_discount={detail?.transaction.voucher_discount || 0}
       />
     </main>
   );

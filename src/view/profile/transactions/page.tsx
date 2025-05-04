@@ -41,7 +41,7 @@ const TransactionsView: React.FunctionComponent<ITransactionsViewProps> = (
           event_name={item.transaction.events.title}
           invoice_id={item.transaction.invoice_id}
           transaction_date={item.transaction.created_at}
-          total_price={item.totalPricesPerTransaction}
+          total_price={item.transaction.total_price}
           status={item.transaction.status}
         />
       ))

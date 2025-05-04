@@ -25,7 +25,7 @@ const AboutSection: React.FunctionComponent<IAboutSectionProps> = (props) => {
           <div className="bg-[#EEF2FF] w-1/2 p-4 rounded-xl">
             <h4 className="text-[#4F46E5]">Available Seats</h4>
             <p className="font-bold text-2xl">
-              {props.seats}/{props.seats}
+              {props.seats}
             </p>
           </div>
           <div className="bg-[#F5F3FF] w-1/2 p-4 rounded-xl">
