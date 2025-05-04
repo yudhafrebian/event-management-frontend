@@ -17,45 +17,34 @@ interface ITicketTypeContentProps {
 const TicketTypeContent: React.FunctionComponent<ITicketTypeContentProps> = (
   props
 ) => {
-  const user = useAppSelector((state) => state.authState);
-  const router = useRouter()
-
-  const handleBuy = () => {
-    toast.info("Please Login", {
-      description: "You need to login to buy ticket",
-      action:{
-        label: "Login",
-        onClick: () => router.push("/sign-in")
-      }
-    });
-  };
   return (
     <CardContent>
       <div className="border-2 rounded-lg p-4">
         <div className="flex justify-between">
           <h4 className="font-bold text-lg">{props.type_name}</h4>
-          <p className="font-bold text-2xl text-primary">
-            {props.price.toLocaleString("id-ID", {
-              style: "currency",
-              currency: "IDR",
-              maximumFractionDigits: 0,
-            })}
-          </p>
+          <div className="flex items-center gap-2">
+            <p
+              className={`font-bold text-2xl text-primary ${
+                props.quota === 0 ? "line-through" : ""
+              }`}
+            >
+              {props.price.toLocaleString("id-ID", {
+                style: "currency",
+                currency: "IDR",
+                maximumFractionDigits: 0,
+              })}
+            </p>
+            <p className="text-2xl text-destructive font-bold">
+              {props.quota === 0 ? "Sold Out" : ""}
+            </p>
+          </div>
         </div>
-        <div className="text-[#4B5563] mt-2 mb-4">
-          <p>{props.description}</p>
-        </div>
-        <div className="flex justify-between">
-          <p className="font-semibold">Quota : {props.quota}</p>
-          {user.email ? (
-            <Link href={`/events/${props.slug}/transaction/${props.type_name}`}>
-              <Button className="cursor-pointer">Buy</Button>
-            </Link>
-          ) : (
-            <Button onClick={handleBuy} className="cursor-pointer">
-              Buy
-            </Button>
-          )}
+        <div className="flex justify-between items-center">
+          <div className="mt-2 mb-4">
+            <p className="font-semibold">Ticket Description</p>
+            <p className="text-[#4B5563] text-sm">{props.description}</p>
+          </div>
+          <p className="font-semibold text-right">Quota : {props.quota}</p>
         </div>
       </div>
     </CardContent>

@@ -25,11 +25,14 @@ interface ICardPaymentProps {
   expired_hours: Date;
   status: string;
   title: string;
+  total_price: number;
+  sub_total: number;
+  point_discount: number;
+  voucher_discount: number;
   order_summary: {
     type_name: string;
     price: number;
   }[];
-  total_price: number;
 }
 
 interface iFormValue {
@@ -140,10 +143,22 @@ const CardPayment: React.FunctionComponent<ICardPaymentProps> = (props) => {
       <CardContent>
         <div>
           {props.status === "Pending" && (
-            <div className="text-center">
-              <p className="font-bold text-xl">Time Left</p>
-              <p className="font-bold text-2xl text-primary">
-                {timeLeft.hours} : {timeLeft.minutes} : {timeLeft.seconds}
+            <div>
+              <div className="text-center">
+                <p className="font-bold text-xl">Time Left</p>
+                <p className="font-bold text-2xl text-primary">
+                  {timeLeft.hours} : {timeLeft.minutes} : {timeLeft.seconds}
+                </p>
+              </div>
+              <p className="text-xs text-[#4B5563] mt-2">
+                * Upload your payment proof before time runs out.
+              </p>
+              <p className="text-xs text-[#4B5563]">
+                * Once expired, your transaction will be cancelled
+                automatically.
+              </p>
+              <p className="text-xs text-[#4B5563]">
+                * Feel free to make a new transaction at any time.
               </p>
             </div>
           )}
@@ -161,6 +176,43 @@ const CardPayment: React.FunctionComponent<ICardPaymentProps> = (props) => {
                 </p>
               </div>
             ))}
+            <Separator />
+            <div className="flex justify-between my-2 font-bold">
+              <p>Subtotal</p>
+              <p>
+                {props.sub_total.toLocaleString("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                  maximumFractionDigits: 0,
+                })}
+              </p>
+            </div>
+            {props.point_discount > 0 && (
+              <div className="flex justify-between text-sm text-[#4B5563] mb-2">
+                <p>Point Discount</p>
+                <p>
+                  -{" "}
+                  {props.point_discount.toLocaleString("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                    maximumFractionDigits: 0,
+                  })}
+                </p>
+              </div>
+            )}
+            {props.voucher_discount > 0 && (
+              <div className="flex justify-between text-sm text-[#4B5563] mb-2">
+                <p>Voucher Discount</p>
+                <p>
+                  -{" "}
+                  {props.voucher_discount.toLocaleString("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                    maximumFractionDigits: 0,
+                  })}
+                </p>
+              </div>
+            )}
             <Separator />
             <div className="flex justify-between mt-2 font-bold">
               <p>Total Price</p>
@@ -235,7 +287,10 @@ const CardPayment: React.FunctionComponent<ICardPaymentProps> = (props) => {
                       </Button>
                     ))
                   )}
-                  <Button className="cursor-pointer bg-destructive hover:bg-destructive/80" onClick={() => router.back()}>
+                  <Button
+                    className="cursor-pointer bg-destructive hover:bg-destructive/80"
+                    onClick={() => router.back()}
+                  >
                     Back
                   </Button>
                 </div>

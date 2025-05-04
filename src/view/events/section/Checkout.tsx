@@ -9,11 +9,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, use } from "react";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { apiCall } from "@/utils/apiHelper";
+import { Switch } from "@/components/ui/switch";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import CardVoucher from "@/components/card/cardVoucher";
+import { set } from "lodash";
 
 interface ICheckoutSectionProps {
   event_id: number;
@@ -31,11 +35,50 @@ interface ICheckoutSectionProps {
   }[];
 }
 
+interface iVoucher {
+  code: string;
+  disc_amount: number;
+  start_date: Date;
+  end_date: Date;
+  quota: number;
+}
+
 const CheckoutSection: React.FunctionComponent<ICheckoutSectionProps> = (
   props
 ) => {
   const router = useRouter();
   const [amounts, setAmounts] = useState<number[]>([]);
+  const [points, setPoints] = useState<number>(0);
+  const [voucherCode, setVoucherCode] = useState<string>("");
+  const [voucherData, setVoucherData] = useState<iVoucher | null>(null);
+
+  const [usePoints, setUsePoints] = useState<boolean>(false);
+
+  const getVoucher = async () => {
+    try {
+      const response = await apiCall.get(`/vouchers/${voucherCode}`);
+
+      setVoucherData(response.data);
+    } catch (error) {
+      toast.error("Voucher not found");
+      console.log(error);
+    }
+  };
+
+  const getPoints = async () => {
+    try {
+      const token = localStorage.getItem("tkn");
+      const response = await apiCall.get("/transactions/points", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setPoints(response.data.total_point);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleTicketAmount = (index: number, value: number) => {
     setAmounts((prev) => {
@@ -66,6 +109,18 @@ const CheckoutSection: React.FunctionComponent<ICheckoutSectionProps> = (
       return total + ticket.price * (amounts[index] || 0);
     }, 0);
   }, [amounts, props.ticket_types]);
+
+  const afterDiscount = useMemo(() => {
+    let dicounted = totalPrice;
+    if (voucherData) {
+      dicounted -= voucherData.disc_amount;
+    }
+    if (usePoints) {
+      dicounted -= points;
+    }
+
+    return Math.max(0, dicounted);
+  }, [totalPrice, points, usePoints, voucherData]);
 
   const checkoutPayload = useMemo(() => {
     return props.ticket_types
@@ -98,16 +153,26 @@ const CheckoutSection: React.FunctionComponent<ICheckoutSectionProps> = (
 
       const token = localStorage.getItem("tkn");
 
-      const response = await apiCall.post("/transactions/create", {
+      const response = await apiCall.post(
+        "/transactions/create",
+        {
           event_id: props.event_id,
           tickets: ticketToBuy,
-          total_price: totalPrice,
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`
+          sub_total: totalPrice,
+          point_discount: usePoints ? points : 0,
+          voucher_discount: voucherData ? voucherData.disc_amount : 0,
+          total_price: afterDiscount,
+          usePoints,
+          useVoucher: voucherData ? true : false,
+          voucher_code: voucherData?.code ?? null,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      })
-
+      );
+      console.log(response.data);
       toast.success("Transaction created successfully");
       router.push("/profile/transactions");
     } catch (error) {
@@ -115,7 +180,10 @@ const CheckoutSection: React.FunctionComponent<ICheckoutSectionProps> = (
     }
   };
 
-  
+  useEffect(() => {
+    getPoints();
+    getVoucher();
+  }, []);
 
   useEffect(() => {
     if (props.ticket_types.length > 0) {
@@ -132,26 +200,39 @@ const CheckoutSection: React.FunctionComponent<ICheckoutSectionProps> = (
       </DialogTrigger>
       <DialogContent className="sm:max-w-[58em]">
         <div className="flex w-[55em] gap-6">
-          <div className="w-1/2 flex flex-col justify-between">
+          <div className="w-1/2 flex flex-col">
             <DialogHeader>
               <DialogTitle className="text-2xl font-bold">
                 {props.event_name}
               </DialogTitle>
-              {/* <DialogDescription>
-                <p>
-                  {props.start_date === props.end_date
-                    ? format(props.start_date, "PPP")
-                    : `${format(props.start_date, "PPP")} - ${format(
-                        props.end_date,
-                        "PPP"
-                      )}`}
-                </p>
-              </DialogDescription> */}
             </DialogHeader>
-
-            <div className="mt-6">
-              <h2 className="text-lg font-semibold mb-2">Tickets</h2>
-
+            <div>
+              <div>
+                <h2 className="text-lg font-semibold my-2">Voucher</h2>
+                <div className="flex gap-2 mb-4">
+                  <Input
+                    placeholder="Enter voucher code"
+                    value={voucherCode}
+                    onChange={(e) => setVoucherCode(e.target.value.toUpperCase())}
+                  />
+                  <Button type="button" className="cursor-pointer" onClick={getVoucher}>Apply</Button>
+                </div>
+                <div className="flex items-center gap-4">
+                  {voucherData && (
+                    <CardVoucher
+                      code={voucherData.code}
+                      discount={voucherData.disc_amount}
+                      end_date={voucherData.end_date}
+                      start_date={voucherData.start_date}
+                      quota={voucherData.quota}
+                    />
+                  )}
+                  {voucherData && (
+                    <Button type="button" className="cursor-pointer" variant={"destructive"} onClick={() => setVoucherData(null)}>Remove</Button>
+                  )}
+                </div>
+              </div>
+              <h2 className="text-lg font-semibold my-2">Tickets</h2>
               {props.ticket_types.map((ticket, index) => (
                 <div
                   key={ticket.type_name}
@@ -218,11 +299,62 @@ const CheckoutSection: React.FunctionComponent<ICheckoutSectionProps> = (
                 </div>
               ))}
             </div>
+            <div className="mt-6 border-t pt-4 flex justify-between">
+              <p>Your Points:</p>
+              <p>
+                {points.toLocaleString("id-ID", { maximumFractionDigits: 0 })}
+              </p>
+            </div>
+            <div className="flex items-center justify-between gap-2">
+              <p>Use Points</p>
+              <Switch
+                className="cursor-pointer"
+                checked={usePoints}
+                onCheckedChange={setUsePoints}
+              />
+            </div>
 
             <div className="mt-6 border-t pt-4 flex justify-between font-bold text-lg">
-              <p>Total:</p>
+              <p>Sub Total:</p>
               <p>
                 {totalPrice.toLocaleString("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                  maximumFractionDigits: 0,
+                })}
+              </p>
+            </div>
+            {usePoints && (
+              <div className="flex justify-between text-sm text-[#4B5563]">
+                <p>Point Discounts</p>
+                <p>
+                  -{" "}
+                  {points.toLocaleString("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                    maximumFractionDigits: 0,
+                  })}
+                </p>
+              </div>
+            )}
+            {voucherData && (
+              <div className="flex justify-between text-sm text-[#4B5563]">
+                <p>Voucher Discounts</p>
+                <p>
+                  -{" "}
+                  {voucherData.disc_amount.toLocaleString("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                    maximumFractionDigits: 0,
+                  })}
+                </p>
+              </div>
+            )}
+
+            <div className="mt-6 border-t pt-4 flex justify-between">
+              <p className="font-bold text-lg">Total:</p>
+              <p className="font-bold text-lg">
+                {afterDiscount.toLocaleString("id-ID", {
                   style: "currency",
                   currency: "IDR",
                   maximumFractionDigits: 0,
