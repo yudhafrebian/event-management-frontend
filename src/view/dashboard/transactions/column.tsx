@@ -19,7 +19,7 @@ import {
 import { apiCall } from "@/utils/apiHelper";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { EyeIcon, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, EyeIcon, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -46,18 +46,34 @@ export const columns: ColumnDef<transactionColumn>[] = [
   },
   {
     accessorKey: "created_at",
-    header: "Transaction Date",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant={"ghost"}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Transaction Date
+          <ArrowUpDown />
+        </Button>
+      );
+    },
     cell: ({ row }) => {
       const transaction = row.original;
-      return format(new Date(transaction.created_at), "PP");
-    }
+      return format(new Date(transaction.created_at), "Pp");
+    },
   },
   {
     accessorKey: "total_price",
     header: "Total Price",
     cell: ({ row }) => {
       const transaction = row.original;
-      return transaction.total_price === 0 ? "Free" : transaction.total_price;
+      return transaction.total_price === 0
+        ? "Free"
+        : transaction.total_price.toLocaleString("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            maximumFractionDigits: 0,
+          });
     },
   },
   {
@@ -66,12 +82,24 @@ export const columns: ColumnDef<transactionColumn>[] = [
     header: "Detail",
     cell: ({ row }) => {
       const transaction = row.original;
-      return (
+      return transaction.payment_proof ? (
         <Link target="_blank" href={transaction.payment_proof}>
           <Button className="cursor-pointer" variant={"link"}>
             <EyeIcon />
           </Button>
         </Link>
+      ) : transaction.total_price === 0 ? (
+        <Button className="cursor-default opacity-50" variant="link" disabled>
+          No need proof
+        </Button>
+      ) : (
+        <Button
+          className="cursor-default opacity-50 text-amber-600"
+          variant="link"
+          disabled
+        >
+          No proof
+        </Button>
       );
     },
   },
@@ -85,8 +113,12 @@ export const columns: ColumnDef<transactionColumn>[] = [
           className={
             transaction.status === "Confirmating"
               ? "text-primary"
-              : transaction.status === "Rejected"
+              : transaction.status === "Rejected" ||
+                transaction.status === "Expired" ||
+                transaction.status === "Canceled"
               ? "text-red-600"
+              : transaction.status === "Pending"
+              ? "text-amber-600"
               : "text-green-600"
           }
         >
@@ -169,7 +201,7 @@ export const columns: ColumnDef<transactionColumn>[] = [
               </DialogHeader>
               <div className="flex gap-4 justify-center">
                 <Button
-                className="cursor-pointer"
+                  className="cursor-pointer"
                   onClick={() => {
                     updateStatus("Approved");
                     setOpenDialogApprove(false);
@@ -178,7 +210,9 @@ export const columns: ColumnDef<transactionColumn>[] = [
                   Approve
                 </Button>
                 <DialogClose asChild>
-                  <Button className="cursor-pointer" variant={"destructive"} >Cancel</Button>
+                  <Button className="cursor-pointer" variant={"destructive"}>
+                    Cancel
+                  </Button>
                 </DialogClose>
               </div>
             </DialogContent>
@@ -195,7 +229,7 @@ export const columns: ColumnDef<transactionColumn>[] = [
               </DialogHeader>
               <div className="flex gap-4 justify-center">
                 <Button
-                className="cursor-pointer"
+                  className="cursor-pointer"
                   onClick={() => {
                     updateStatus("Rejected");
                     setOpenDialogReject(false);
@@ -204,7 +238,9 @@ export const columns: ColumnDef<transactionColumn>[] = [
                   Reject
                 </Button>
                 <DialogClose asChild>
-                  <Button className="cursor-pointer" variant={"destructive"} >Cancel</Button>
+                  <Button className="cursor-pointer" variant={"destructive"}>
+                    Cancel
+                  </Button>
                 </DialogClose>
               </div>
             </DialogContent>
