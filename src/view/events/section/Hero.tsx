@@ -18,7 +18,7 @@ const HeroSection: React.FunctionComponent<IHeroSectionProps> = (props) => {
   const isSameDay = startDate.toDateString() === endDate.toDateString();
 
   return (
-    <div className="h-[400px] pt-16">
+    <div className="h-[400px] md:pt-16">
       <div className="relative w-full h-full">
         <Image
           src={
@@ -30,8 +30,8 @@ const HeroSection: React.FunctionComponent<IHeroSectionProps> = (props) => {
           objectFit="cover"
           objectPosition="center"
         />
-        <div className="absolute top-1/2 bg-primary/70 px-8 py-4 rounded-tr-2xl rounded-br-2xl">
-          <h1 className="text-5xl font-bold text-white">{props.title}</h1>
+        <div className="absolute top-3/5 md:top-1/2 bg-primary/70 px-8 py-4 rounded-tr-2xl rounded-br-2xl">
+          <h1 className="text-3xl md:text-5xl font-bold text-white">{props.title}</h1>
           <div className="flex gap-6 mt-3">
             <div className="flex gap-2">
               <CalendarIcon />

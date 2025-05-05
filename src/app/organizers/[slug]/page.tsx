@@ -83,23 +83,23 @@ const DetailOrganizer: React.FunctionComponent<IDetailOrganizerProps> = (
     getOrganizerDetail();
   }, []);
   return (
-    <main className="px-4 py-8 md:px-24 md:py-20 bg-[#F9FAFB]">
+    <main className="px-4 py-8 md:px-24 md:py-20 pt-20 bg-[#F9FAFB]">
       <ProfileSection
         organizer_name={organizer?.detail.organizer_name || ""}
         description={organizer?.detail.description || ""}
         profile_img={organizer?.detail.profile_img || ""}
         total_event={organizer?.totalEvents || 0}
       />
-      <div className="flex gap-8 mt-8">
-        <div className="w-2/3">
+      <div className="flex flex-col md:flex-row gap-8 mt-8">
+        <div className="md:w-2/3">
           <Card>
             <CardHeader>
               <CardTitle className="font-bold text-xl">Organizer Events</CardTitle>
             </CardHeader>
-            <CardContent className="grid grid-cols-2 gap-8">{printEvents()}</CardContent>
+            <CardContent className="grid md:grid-cols-2 gap-8">{printEvents()}</CardContent>
           </Card>
         </div>
-        <div className="flex flex-col w-1/3">
+        <div className="flex flex-col md:w-1/3">
           <OwnerSection
             id={organizer?.detail.users.id || ""}
             first_name={organizer?.detail.users.first_name || ""}

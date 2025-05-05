@@ -19,6 +19,8 @@ import { values } from "lodash";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { DataTable } from "./dataTable";
+import { columns } from "./column";
 
 interface IPromotionViewProps {}
 
@@ -32,6 +34,23 @@ interface iFormValue {
 }
 
 const PromotionView: React.FunctionComponent<IPromotionViewProps> = (props) => {
+  const [data, setData] = useState<any[]>([]);
+
+  const getActiveVoucher = async () => {
+    try {
+      const token = localStorage.getItem("tkn");
+      const response = await apiCall.get("/vouchers/list", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setData(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const createVoucher = async (values: iFormValue) => {
     try {
       const token = localStorage.getItem("tkn");
@@ -57,10 +76,15 @@ const PromotionView: React.FunctionComponent<IPromotionViewProps> = (props) => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    getActiveVoucher();
+  }, []);
+
   return (
     <div>
       <h1 className="font-bold text-2xl">Promotion</h1>
-      <div>
+      <div className="mt-10">
         <Dialog>
           <DialogTrigger asChild>
             <Button className="cursor-pointer" type="button">
@@ -92,53 +116,59 @@ const PromotionView: React.FunctionComponent<IPromotionViewProps> = (props) => {
                 const { errors, touched, handleChange } = props;
 
                 return (
-                  <Form>
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="event">Event</Label>
-                      <EventNameSelector name="event_name" />
+                  <Form className="flex flex-col gap-4">
+                    <div className="flex gap-4">
+                      <div className="flex flex-col gap-2 w-1/2">
+                        <Label htmlFor="event">Event</Label>
+                        <EventNameSelector name="event_name" />
+                      </div>
+                      <div className="flex flex-col gap-2 w-1/2">
+                        <Label htmlFor="code">Code</Label>
+                        <Input
+                          name="code"
+                          placeholder="Input unique code"
+                          onChange={(e) => {
+                            e.target.value = e.target.value.toUpperCase();
+                            handleChange(e);
+                          }}
+                        />
+                      </div>
                     </div>
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="code">Code</Label>
-                      <Input
-                        name="code"
-                        placeholder="Input unique code"
-                        onChange={(e) => {
-                          e.target.value = e.target.value.toUpperCase();
-                          handleChange(e);
-                        }}
-                      />
+                    <div className="flex gap-4">
+                      <div className="flex flex-col gap-2 w-1/2">
+                        <Label htmlFor="start_date">Start Date</Label>
+                        <Input
+                          name="start_date"
+                          type="date"
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div className="flex flex-col gap-2 w-1/2">
+                        <Label htmlFor="end_date">End Date</Label>
+                        <Input
+                          name="end_date"
+                          type="date"
+                          onChange={handleChange}
+                        />
+                      </div>
                     </div>
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="start_date">Start Date</Label>
-                      <Input
-                        name="start_date"
-                        type="date"
-                        onChange={handleChange}
-                      />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="end_date">End Date</Label>
-                      <Input
-                        name="end_date"
-                        type="date"
-                        onChange={handleChange}
-                      />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="disc_amount">Discount Amount</Label>
-                      <Input
-                        name="disc_amount"
-                        type="number"
-                        onChange={handleChange}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="quota">Quota</Label>
-                      <Input
-                        name="quota"
-                        type="number"
-                        onChange={handleChange}
-                      />
+                    <div className="flex gap-4">
+                      <div className="flex flex-col gap-2 w-1/2">
+                        <Label htmlFor="disc_amount">Discount Amount</Label>
+                        <Input
+                          name="disc_amount"
+                          type="number"
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div className="flex flex-col gap-2 w-1/2">
+                        <Label htmlFor="quota">Quota</Label>
+                        <Input
+                          name="quota"
+                          type="number"
+                          onChange={handleChange}
+                        />
+                      </div>
                     </div>
                     <Button type="submit">Submit</Button>
                   </Form>
@@ -148,6 +178,7 @@ const PromotionView: React.FunctionComponent<IPromotionViewProps> = (props) => {
           </DialogContent>
         </Dialog>
       </div>
+      <DataTable columns={columns} data={data} />
     </div>
   );
 };

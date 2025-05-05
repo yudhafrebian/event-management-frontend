@@ -86,8 +86,8 @@ const DetailEvent: React.FunctionComponent<IDetailEventProps> = (props) => {
         end_date={event?.detail.end_date || new Date()}
         location={event?.detail.location || ""}
       />
-      <div className="flex px-24 py-8 gap-8">
-        <div className="flex flex-col w-2/3 gap-8">
+      <div className="flex flex-col md:flex-row md:px-24 px-4 py-8 gap-8">
+        <div className="flex flex-col md:w-2/3 gap-8">
           <AboutSection
             description={event?.detail.description || ""}
             seats={event?.quota || 0}
@@ -109,7 +109,7 @@ const DetailEvent: React.FunctionComponent<IDetailEventProps> = (props) => {
             ))}
           </Card>
         </div>
-        <div className="flex flex-col w-1/3 gap-8">
+        <div className="flex flex-col md:w-1/3 gap-8">
           <OrganizerSection
             id={event?.detail.organizer.id || ""}
             profile_picture={event?.detail.organizer.profile_img || ""}
