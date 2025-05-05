@@ -68,8 +68,6 @@ const EventView = () => {
     }
   };
 
-  
-
   const printEvents = () => {
     return data.length > 0 ? (
       data.map((item: any) => (

@@ -56,7 +56,7 @@ const CheckoutSection: React.FunctionComponent<ICheckoutSectionProps> = (
 
   const getVoucher = async () => {
     try {
-      const response = await apiCall.get(`/vouchers/${voucherCode}`);
+      const response = await apiCall.get(`/vouchers/${props.event_id}/${voucherCode}`);
 
       setVoucherData(response.data);
     } catch (error: any) {
@@ -153,6 +153,7 @@ const CheckoutSection: React.FunctionComponent<ICheckoutSectionProps> = (
         })
       );
 
+
       const token = localStorage.getItem("tkn");
 
       const response = await apiCall.post(
@@ -165,6 +166,8 @@ const CheckoutSection: React.FunctionComponent<ICheckoutSectionProps> = (
           voucher_discount: voucherData ? voucherData.disc_amount : 0,
           total_price: afterDiscount,
           usePoints,
+          voucherCode,
+          status: afterDiscount === 0 ? "Approved" : "Pending",
           useVoucher: voucherData ? true : false,
           voucher_code: voucherData?.code ?? null,
         },
@@ -326,6 +329,7 @@ const CheckoutSection: React.FunctionComponent<ICheckoutSectionProps> = (
               <p>Use Points</p>
               <Switch
                 className="cursor-pointer"
+                disabled={totalPrice === 0}
                 checked={usePoints}
                 onCheckedChange={setUsePoints}
               />

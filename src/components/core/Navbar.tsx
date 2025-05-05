@@ -58,6 +58,7 @@ const Navbar: React.FunctionComponent = () => {
           })
         );
         localStorage.setItem("tkn", response.data.token);
+
       } else {
         dispatch(setSignIn({ isAuth: false }));
       }

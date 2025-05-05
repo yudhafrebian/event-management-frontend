@@ -272,7 +272,7 @@ const CardPayment: React.FunctionComponent<ICardPaymentProps> = (props) => {
                       >
                         Upload
                       </Button>
-                    ) : (
+                    ) : props.status === "Confirmating" ? (
                       <Button
                         type="button"
                         className="cursor-pointer"
@@ -285,6 +285,19 @@ const CardPayment: React.FunctionComponent<ICardPaymentProps> = (props) => {
                       >
                         Upload
                       </Button>
+                    ): (
+                      <Button
+                      type="button"
+                      className="cursor-pointer"
+                      onClick={() =>
+                        toast.info("Payment Already Approved", {
+                          description:
+                            "Please check your email for the tickets",
+                        })
+                      }
+                    >
+                      Upload
+                    </Button>
                     ))
                   )}
                   <Button
