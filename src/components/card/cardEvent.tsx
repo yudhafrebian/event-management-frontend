@@ -55,7 +55,7 @@ const CardEvent: React.FunctionComponent<ICardEventProps> = (props) => {
         <p className="text-muted-foreground text-xs md:text-base pt-3">{props.description}</p>
       </CardContent>
       <CardFooter>
-        <div className="flex justify-between w-full">
+        <div className="flex flex-col md:flex-row gap-2 md:gap-0 items-end md:justify-between w-full">
           <Badge variant={"outline"}>
             {props.price !== 0
               ? `Starts at ${props.price.toLocaleString("id-ID", {

@@ -68,7 +68,7 @@ const LocationSelector: React.FunctionComponent<ILocationSelectorProps> = (
           <ChevronsUpDown />
         </Button>
       </PopoverTrigger>
-      <PopoverContent>
+      <PopoverContent forceMount>
         <Command>
           <CommandList>
             <CommandInput placeholder="Search location..." />

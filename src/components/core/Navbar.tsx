@@ -15,6 +15,7 @@ import { CirclePlus, Info, Menu, Phone, Search } from "lucide-react";
 import { apiCall } from "@/utils/apiHelper";
 import { useAppDispatch, useAppSelector } from "@/app/hook";
 import { setSignIn, setSignOut } from "@/lib/redux/features/authSlice";
+import Image from "next/image";
 
 const Navbar: React.FunctionComponent = () => {
   const pathname = usePathname();
@@ -76,7 +77,7 @@ const Navbar: React.FunctionComponent = () => {
       <div className="flex justify-between items-center">
         <div>
           <Link href={user.role === "organizer" ? "/dashboard" : "/"}>
-            <p>LOGO</p>
+            <Image src={"/assets/es 2.png"} width={150} height={100} alt={"logo"} />
           </Link>
         </div>
         <div

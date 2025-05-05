@@ -28,9 +28,6 @@ const HeroSection: React.FunctionComponent<IHeroSectionProps> = (props) => {
               Browse Events
             </Button>
             </Link>
-            <Button className="cursor-pointer" variant={"outline"} size={"lg"}>
-              Create Event
-            </Button>
           </div>
         </div>
       </div>

@@ -13,15 +13,16 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { useEffect, useState } from "react";
 import { apiCall } from "@/utils/apiHelper";
 import { useRouter, useSearchParams } from "next/navigation";
+import { PopoverPortal } from "@radix-ui/react-popover";
+import { Portal } from "@radix-ui/react-portal";
 
-interface ICategoriesSelectorProps {
-}
+interface ICategoriesSelectorProps {}
 
 const CategoriesSelector: React.FunctionComponent<ICategoriesSelectorProps> = (
   props
 ) => {
   const searchParams = useSearchParams();
-  const router = useRouter()
+  const router = useRouter();
 
   const [open, setOpen] = useState<boolean>(false);
   const [value, setValue] = useState<string>(
@@ -68,30 +69,34 @@ const CategoriesSelector: React.FunctionComponent<ICategoriesSelectorProps> = (
           <ChevronsUpDown />
         </Button>
       </PopoverTrigger>
-      <PopoverContent>
-        <Command>
-          <CommandList>
-            <CommandGroup>
-              {categories.map((category) => (
-                <CommandItem
-                  key={category}
-                  value={category}
-                  onSelect={(currentValue) => {
-                    handleCategoryChange(category);
-                    setValue(currentValue === value ? "" : currentValue);
-                    setOpen(false);
-                  }}
-                >
-                  {category}
-                  <Check
-                    className={value === category ? "opacity-100" : "opacity-0"}
-                  />
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </PopoverContent>
+      <Portal>
+        <PopoverContent forceMount>
+          <Command>
+            <CommandList>
+              <CommandGroup>
+                {categories.map((category) => (
+                  <CommandItem
+                    key={category}
+                    value={category}
+                    onSelect={(currentValue) => {
+                      handleCategoryChange(category);
+                      setValue(currentValue === value ? "" : currentValue);
+                      setOpen(false);
+                    }}
+                  >
+                    {category}
+                    <Check
+                      className={
+                        value === category ? "opacity-100" : "opacity-0"
+                      }
+                    />
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Portal>
     </Popover>
   );
 };

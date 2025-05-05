@@ -24,7 +24,7 @@ const TicketTypeContent: React.FunctionComponent<ITicketTypeContentProps> = (
           <h4 className="font-bold text-lg">{props.type_name}</h4>
           <div className="flex items-center gap-2">
             <p
-              className={`font-bold text-2xl text-primary ${
+              className={`font-bold text-lg md:text-2xl text-primary ${
                 props.quota === 0 ? "line-through" : ""
               }`}
             >
@@ -39,10 +39,10 @@ const TicketTypeContent: React.FunctionComponent<ITicketTypeContentProps> = (
             </p>
           </div>
         </div>
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col md:flex-row justify-between md:items-center mt-4">
           <div className="mt-2 mb-4">
-            <p className="font-semibold">Ticket Description</p>
-            <p className="text-[#4B5563] text-sm">{props.description}</p>
+            <p className="font-semibold text-sm md:text-base">Ticket Description</p>
+            <p className="text-[#4B5563] text-xs md:text-sm">{props.description}</p>
           </div>
           <p className="font-semibold text-right">Quota : {props.quota}</p>
         </div>

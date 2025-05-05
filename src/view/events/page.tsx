@@ -1,10 +1,8 @@
 "use client";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
-import { IoSearch } from "react-icons/io5";
 import { Input } from "@/components/ui/input";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, Filter } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -28,8 +26,15 @@ import CardLoader from "./Loading";
 import CategoriesSelector from "@/components/filter/Categories";
 import SearchBar from "./section/SearchBar";
 import { useSearchParams } from "next/navigation";
-import axios from "axios";
 import LocationSelector from "@/components/filter/Location";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import { Portal } from "@radix-ui/react-portal";
 
 const EventView = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -126,10 +131,153 @@ const EventView = () => {
       </div>
       <div className="flex flex-col gap-8 mt-5">
         <SearchBar />
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-6">
+        <div className="md:hidden">
+          <Drawer>
+            <DrawerTrigger asChild>
+              <Button variant={"outline2"} className="md:hidden cursor-pointer">
+                Filter <Filter />
+              </Button>
+            </DrawerTrigger>
+            <Portal>
+              <DrawerContent>
+                <div className="mx-auto w-full max-w-sm px-10 pb-10">
+                  <DrawerHeader>
+                    <DrawerTitle>Filter Events</DrawerTitle>
+                  </DrawerHeader>
+                  <div className="flex flex-col justify-center gap-4">
+                    <CategoriesSelector />
+                    <LocationSelector />
+                    <Popover open={openPrice} onOpenChange={setOpenPrice}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant={"outline2"}
+                          role="combobox"
+                          aria-expanded={openPrice}
+                          className="justify-between cursor-pointer"
+                        >
+                          {`${PriceMin.toLocaleString("id-ID", {
+                            style: "currency",
+                            currency: "IDR",
+                            minimumFractionDigits: 0,
+                          })} - ${PriceMax.toLocaleString("id-ID", {
+                            style: "currency",
+                            currency: "IDR",
+                            minimumFractionDigits: 0,
+                          })}`}
+                          <ChevronsUpDown />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent>
+                        <div className="flex flex-col gap-3">
+                          <div className="flex gap-2">
+                            <Label htmlFor="min" className="text-xs">
+                              Min. Price
+                            </Label>
+                            <Input
+                              id="min"
+                              type="number"
+                              className="w-2/3"
+                              placeholder="minimum price"
+                              defaultValue={PriceMin}
+                              onChange={(e) =>
+                                setPriceMin(Number(e.target.value))
+                              }
+                            />
+                          </div>
+                          <div className="flex gap-2 ">
+                            <Label htmlFor="min" className="text-xs">
+                              Max. Price
+                            </Label>
+                            <Input
+                              id="min"
+                              type="number"
+                              className="w-2/3"
+                              placeholder="minimum price"
+                              defaultValue={PriceMax}
+                              onChange={(e) =>
+                                setPriceMax(Number(e.target.value))
+                              }
+                            />
+                          </div>
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant={"outline"}
+                          className="justify-start text-left cursor-pointer text-black"
+                        >
+                          {date ? format(date, "PPP") : "Date Range"}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent>
+                        <Calendar
+                          mode="single"
+                          selected={date}
+                          onSelect={setDate}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <Popover open={openSort} onOpenChange={setOpenSort}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant={"outline2"}
+                          role="combobox"
+                          aria-expanded={open}
+                          className="justify-between cursor-pointer"
+                        >
+                          {`Sort By : ${
+                            valueSort
+                              ? sort.find((sort) => sort.value === valueSort)
+                                  ?.label
+                              : ""
+                          }`}
+                          <ChevronsUpDown />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent>
+                        <Command>
+                          <CommandList>
+                            <CommandGroup>
+                              {sort.map((sort) => (
+                                <CommandItem
+                                  key={sort.value}
+                                  value={sort.value}
+                                  onSelect={(currentValue) => {
+                                    setValueSort(
+                                      currentValue === valueSort
+                                        ? ""
+                                        : currentValue
+                                    );
+                                    setOpen(false);
+                                  }}
+                                >
+                                  {sort.label}
+                                  <Check
+                                    className={
+                                      valueSort === sort.value
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    }
+                                  />
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                </div>
+              </DrawerContent>
+            </Portal>
+          </Drawer>
+        </div>
+        <div className="hidden md:grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-6 ">
           <CategoriesSelector />
           <LocationSelector />
-
           <Popover open={openPrice} onOpenChange={setOpenPrice}>
             <PopoverTrigger asChild>
               <Button
@@ -181,7 +329,6 @@ const EventView = () => {
               </div>
             </PopoverContent>
           </Popover>
-
           <Popover>
             <PopoverTrigger asChild>
               <Button
@@ -200,7 +347,6 @@ const EventView = () => {
               />
             </PopoverContent>
           </Popover>
-
           <Popover open={openSort} onOpenChange={setOpenSort}>
             <PopoverTrigger asChild>
               <Button
@@ -249,7 +395,7 @@ const EventView = () => {
           </Popover>
         </div>
       </div>
-      <div className="grid grid-cols-4 mt-10 gap-4">
+      <div className="grid md:grid-cols-4 mt-10 gap-4">
         {loading ? <CardLoader /> : printEvents()}
       </div>
     </div>
