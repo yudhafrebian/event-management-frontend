@@ -9,9 +9,10 @@ const verify: React.FunctionComponent = () => {
   const handleVerified = async () => {
     try {
       console.log(queryParams.get("tkn"));
+      const token = localStorage.getItem("tkn");
       const res = await apiCall.patch("/auth/verify", null, {
         headers: {
-          Authorization: `Bearer ${queryParams.get("tkn")}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       alert(res.data);
