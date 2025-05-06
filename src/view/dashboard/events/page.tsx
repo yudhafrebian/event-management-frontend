@@ -32,6 +32,7 @@ import axios from "axios";
 import LocationSelector from "@/components/filter/Location";
 import { useAppSelector } from "@/app/hook";
 import CardEventOrganizer from "./section/CardEventOrganizer";
+import Link from "next/link";
 
 const DashboardEventView = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -257,6 +258,11 @@ const DashboardEventView = () => {
               </Command>
             </PopoverContent>
           </Popover>
+        </div>
+        <div>
+          <Button>
+            <Link href={"/dashboard/create-event"}>Create Event</Link>
+          </Button>
         </div>
       </div>
       <div className="grid grid-cols-4 mt-10 gap-4">
