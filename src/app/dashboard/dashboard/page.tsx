@@ -1,14 +1,16 @@
-import * as React from 'react';
+import Dashboard from "@/view/dashboard/page";
+import * as React from "react";
 
-interface IDashboardPageProps {
-}
+interface IDashboardPageProps {}
 
 const DashboardPage: React.FunctionComponent<IDashboardPageProps> = (props) => {
   return (
     <div>
-        <h1>Dashboard</h1>
+      <h1>
+        <Dashboard />
+      </h1>
     </div>
-  )
+  );
 };
 
 export default DashboardPage;

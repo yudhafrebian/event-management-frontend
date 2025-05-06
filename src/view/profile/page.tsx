@@ -55,7 +55,7 @@ const Profile: React.FC = () => {
     }
   };
 
-  const handleUpload = async () => {
+  const onBtSubmit = async () => {
     try {
       const formData = new FormData();
 
@@ -75,7 +75,6 @@ const Profile: React.FC = () => {
       console.log(formData.get("last_name"));
 
       const res = await apiCall.patch("/auth/updateProfile", formData, {
-        // ERROR SERVER RECEIVED UNDEFINED DATA
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
@@ -141,19 +140,6 @@ const Profile: React.FC = () => {
               </div>
             </>
           )}
-
-          <div>
-            <Button
-              type="button"
-              onClick={isModified ? handleUpload : onBtEdit}
-            >
-              {typeEdit === "text"
-                ? "Edit Profile"
-                : isModified
-                ? "Update Profile"
-                : "Cancel"}
-            </Button>
-          </div>
         </div>
         <div className="flex justify-between">
           <div className="border w-lg p-2 border-gray-300 rounded-lg">
@@ -196,6 +182,13 @@ const Profile: React.FC = () => {
               <strong>Points:</strong>
               <p>{user.points}</p>
             </div>
+            <Button type="button" onClick={isModified ? onBtSubmit : onBtEdit}>
+              {typeEdit === "text"
+                ? "Edit Profile"
+                : isModified
+                ? "Update Profile"
+                : "Cancel"}
+            </Button>
           </div>
           <div className="border w-lg p-2 border-gray-300 rounded-lg">
             <div>
@@ -204,8 +197,9 @@ const Profile: React.FC = () => {
             </div>
             <br />
             <div>
-              <strong>Password:</strong>
+              {/* <strong>Password:</strong>
               <p>Password</p>
+               */}
             </div>
           </div>
         </div>
